@@ -1,0 +1,11 @@
+{
+  "name": "tumbling-daisies",
+  "private": true,
+  "scripts": {
+    "fetch-gigs": "node scripts/fetch-gigs.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "googleapis": "^144.0.0"
+  }
+}

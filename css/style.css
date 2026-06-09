@@ -1,0 +1,574 @@
+/* ============================================
+   TUMBLING DAISIES — matching original site
+   ============================================ */
+
+:root {
+  --cyan: hsl(192, 76%, 57%);
+  --red: hsl(0, 73%, 41%);
+  --red-hover: hsl(0, 69%, 55%);
+  --text: hsl(0, 0%, 18%);
+  --text-light: hsl(0, 0%, 45%);
+  --bg: hsl(0, 0%, 100%);
+  --bg-alt: hsl(0, 0%, 96%);
+  --border: hsl(0, 0%, 88%);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: 'Finlandica', sans-serif;
+  font-size: 17px;
+  line-height: 1.5;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--red);
+  transition: color 0.2s;
+}
+
+a:hover {
+  color: var(--red-hover);
+}
+
+/* --- Navigation --- */
+.nav {
+  background: hsl(0, 0%, 0%);
+  padding: 0;
+}
+
+.nav-inner {
+  max-width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 12px 16px;
+  z-index: 1001;
+}
+
+.nav-toggle span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: #fff;
+  transition: transform 0.3s, opacity 0.3s;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 0;
+}
+
+.nav-links li {
+  display: flex;
+}
+
+.nav-links a {
+  font-family: 'Josefin Sans', sans-serif;
+  font-weight: 400;
+  font-size: 19px;
+  color: hsl(0, 0%, 100%);
+  text-decoration: none;
+  padding: 14px 24px;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover {
+  color: var(--red);
+}
+
+/* --- Hero --- */
+.hero {
+  position: relative;
+  height: 50vh;
+  min-height: 320px;
+  overflow: hidden;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+}
+
+.hero-photos {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-photos img {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: hsla(0, 0%, 0%, 0.47);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 0 2rem;
+}
+
+.hero-title {
+  font-family: 'Sancreek', cursive;
+  font-size: clamp(36px, 12vw, 161px);
+  font-weight: 400;
+  text-transform: uppercase;
+  color: var(--cyan);
+  opacity: 0.51;
+  line-height: 0.9;
+  letter-spacing: 0;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* --- Sections --- */
+.section {
+  padding: 40px 20px;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.section-title {
+  font-family: 'Black Han Sans', sans-serif;
+  font-size: 30px;
+  font-weight: 400;
+  color: var(--text);
+  line-height: 1.3;
+  margin-bottom: 20px;
+}
+
+/* --- About / Bio --- */
+.about {
+  background: var(--bg);
+}
+
+.bio-text {
+  font-family: 'Finlandica', sans-serif;
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--text);
+  margin-bottom: 16px;
+}
+
+.pull-quote {
+  margin: 30px 0;
+  padding: 0;
+  text-align: center;
+}
+
+.pull-quote p {
+  font-family: 'Finlandica', sans-serif;
+  font-style: italic;
+  font-size: 19px;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.pull-quote cite {
+  display: block;
+  margin-top: 8px;
+  font-family: 'Finlandica', sans-serif;
+  font-size: 15px;
+  color: var(--text-light);
+  font-style: normal;
+}
+
+.band-members-list {
+  margin-top: 24px;
+}
+
+.band-members-list p {
+  font-family: 'Finlandica', sans-serif;
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--text);
+}
+
+/* --- Shows --- */
+.shows {
+  background: var(--bg-alt);
+}
+
+.shows-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.show-item {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+  text-decoration: none;
+  color: var(--text);
+  transition: padding-left 0.3s;
+}
+
+.show-item:first-child {
+  border-top: 1px solid var(--border);
+}
+
+.show-item:hover {
+  padding-left: 8px;
+}
+
+.show-item--highlight {
+  border-left: 3px solid var(--red);
+  padding-left: 12px;
+}
+
+.show-item--highlight:hover {
+  padding-left: 16px;
+}
+
+.show-date {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 50px;
+}
+
+.show-month {
+  font-family: 'Josefin Sans', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-light);
+}
+
+.show-day {
+  font-family: 'Black Han Sans', sans-serif;
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--text);
+}
+
+.show-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.show-venue {
+  font-family: 'Jura', sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--text);
+}
+
+.show-city {
+  font-family: 'Finlandica', sans-serif;
+  font-size: 14px;
+  color: var(--text-light);
+  margin-top: 2px;
+}
+
+.show-detail {
+  font-family: 'Josefin Sans', sans-serif;
+  font-weight: 300;
+  font-size: 12px;
+  color: var(--red);
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.show-arrow {
+  font-size: 18px;
+  opacity: 0.2;
+  transition: opacity 0.3s, transform 0.3s;
+  color: var(--text);
+}
+
+.show-item:hover .show-arrow {
+  opacity: 0.6;
+  transform: translateX(4px);
+}
+
+.shows-loading,
+.shows-empty {
+  font-family: 'Finlandica', sans-serif;
+  font-size: 15px;
+  color: var(--text-light);
+  padding: 16px 0;
+}
+
+/* --- Music --- */
+.music {
+  background: var(--bg);
+}
+
+.tracks {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 30px;
+}
+
+.track {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.track:first-child {
+  border-top: 1px solid var(--border);
+}
+
+.track-num {
+  font-family: 'Josefin Sans', sans-serif;
+  font-weight: 300;
+  font-size: 14px;
+  color: var(--border);
+  min-width: 28px;
+}
+
+.track-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.track-name {
+  font-family: 'Jura', sans-serif;
+  font-weight: 600;
+  font-size: 17px;
+  color: var(--text);
+}
+
+.track-meta {
+  font-family: 'Josefin Sans', sans-serif;
+  font-weight: 300;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-light);
+  margin-top: 2px;
+}
+
+.music-cta {
+  text-align: center;
+}
+
+/* --- Buttons --- */
+.btn {
+  display: inline-block;
+  font-family: 'Josefin Sans', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 10px 28px;
+  background: var(--red);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.btn:hover {
+  background: var(--red-hover);
+  color: #fff;
+}
+
+/* --- Contact / Mailing List --- */
+.contact {
+  background: var(--bg-alt);
+}
+
+.mailing-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 50px;
+  max-width: 500px;
+}
+
+.mailing-form input {
+  flex: 1;
+  padding: 10px 14px;
+  font-family: 'Finlandica', sans-serif;
+  font-size: 16px;
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--text);
+}
+
+.mailing-form input:focus {
+  outline: none;
+  border-color: var(--text-light);
+}
+
+.contact-block {
+  margin-bottom: 30px;
+}
+
+.contact-form {
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  padding: 10px 14px;
+  font-family: 'Finlandica', sans-serif;
+  font-size: 16px;
+  background: #fff;
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+.contact-form input::placeholder,
+.contact-form textarea::placeholder,
+.mailing-form input::placeholder {
+  color: var(--text-light);
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  outline: none;
+  border-color: var(--text-light);
+}
+
+.contact-form textarea {
+  resize: vertical;
+}
+
+.contact-form .btn {
+  align-self: flex-start;
+}
+
+.socials {
+  display: flex;
+  gap: 16px;
+  margin-top: 30px;
+  align-items: center;
+}
+
+.social-link {
+  color: var(--text);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.social-link:hover {
+  color: var(--red);
+}
+
+/* --- Footer --- */
+.footer {
+  background: hsl(0, 0%, 0%);
+  color: #fff;
+  padding: 16px 20px;
+}
+
+.footer-inner {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.footer-copy {
+  font-family: 'Josefin Sans', sans-serif;
+  font-weight: 300;
+  font-size: 13px;
+  opacity: 0.5;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 768px) {
+  .nav-inner {
+    justify-content: flex-end;
+  }
+
+  .nav-toggle {
+    display: flex;
+  }
+
+  .nav-links {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 250px;
+    height: 100vh;
+    background: hsl(0, 0%, 0%);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
+    transition: right 0.4s ease;
+    z-index: 1000;
+  }
+
+  .nav-links.open {
+    right: 0;
+  }
+
+  .nav-links a {
+    font-size: 18px;
+    padding: 16px 24px;
+  }
+
+  .hero {
+    height: 35vh;
+    min-height: 200px;
+  }
+
+  .hero-title {
+    font-size: 36px;
+  }
+
+  .section-title {
+    font-size: 24px;
+  }
+
+  .mailing-form {
+    flex-direction: column;
+  }
+}
