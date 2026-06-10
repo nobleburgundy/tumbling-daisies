@@ -459,6 +459,34 @@ a:hover {
   color: #fff;
 }
 
+/* --- Contact Page --- */
+.contact-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  text-align: center;
+}
+
+.contact-card h3 {
+  font-family: 'EB Garamond', serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.contact-card p {
+  font-family: 'EB Garamond', serif;
+  font-size: 18px;
+  color: var(--text-light);
+  margin-bottom: 4px;
+}
+
+.contact-card a {
+  font-family: 'EB Garamond', serif;
+  font-size: 18px;
+}
+
 /* --- Contact / Mailing List --- */
 .contact {
   background: var(--bg-alt);
