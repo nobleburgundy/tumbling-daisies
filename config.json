@@ -1,0 +1,12 @@
+{
+  "calendarId": "d5s5fcphhafm0nvgcek25o9k18@group.calendar.google.com",
+  "holdKeywords": ["(h)", "(hold)", "[h]", "[hold]"],
+  "confirmedKeywords": ["(c)", "(confirmed)", "[c]", "[confirmed]"],
+  "bands": [
+    { "id": "td", "name": "Tumbling Daisies", "short": "TD", "keywords": ["TD", "Tumbling Daisies"] }
+  ],
+  "venueSource": "title",
+  "venueSummarySeparator": "",
+  "daysBack": 0,
+  "daysAhead": 365
+}
