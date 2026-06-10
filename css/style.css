@@ -469,6 +469,8 @@ a:hover {
   gap: 10px;
   margin-bottom: 50px;
   max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .mailing-form input {
@@ -488,10 +490,12 @@ a:hover {
 
 .contact-block {
   margin-bottom: 30px;
+  text-align: center;
 }
 
 .contact-form {
   max-width: 500px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -525,7 +529,7 @@ a:hover {
 }
 
 .contact-form .btn {
-  align-self: flex-start;
+  align-self: center;
 }
 
 .socials {
@@ -533,6 +537,7 @@ a:hover {
   gap: 16px;
   margin-top: 30px;
   align-items: center;
+  justify-content: center;
 }
 
 .social-link {
