@@ -63,7 +63,7 @@ function parseEvent(event) {
     endDate:     event.end?.date       || null,
     venue:       parseVenue(event),
     status:      parseStatus(event),
-    title:       event.summary     || '',
+    title:       (event.summary || '').replace(/^\(C\)\s*/i, '').replace(/\bTD\s*(?:at|@)\s*/i, '').replace(/\bTD Trio\b/g, 'Tumbling Daisies Trio'),
     location:    event.location    || '',
     description: event.description || '',
   };

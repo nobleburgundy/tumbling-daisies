@@ -57,7 +57,7 @@
       var now = new Date();
       now.setHours(0, 0, 0, 0);
       var upcoming = (data.gigs || []).filter(function (g) {
-        return new Date(g.date) >= now && g.status !== 'hold';
+        return new Date(g.date) >= now && g.status === 'confirmed';
       });
 
       container.innerHTML = '';

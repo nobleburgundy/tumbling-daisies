@@ -25,7 +25,7 @@ html {
 }
 
 body {
-  font-family: 'Finlandica', sans-serif;
+  font-family: 'EB Garamond', serif;
   font-size: 17px;
   line-height: 1.5;
   background: var(--bg);
@@ -166,11 +166,12 @@ a:hover {
 }
 
 .section-title {
-  font-family: 'Black Han Sans', sans-serif;
+  font-family: 'EB Garamond', serif;
   font-size: 30px;
-  font-weight: 400;
+  font-weight: 500;
   color: var(--text);
   line-height: 1.3;
+  letter-spacing: 0.03em;
   margin-bottom: 20px;
 }
 
@@ -180,7 +181,7 @@ a:hover {
 }
 
 .bio-text {
-  font-family: 'Finlandica', sans-serif;
+  font-family: 'EB Garamond', serif;
   font-size: 17px;
   line-height: 1.5;
   color: var(--text);
@@ -194,7 +195,7 @@ a:hover {
 }
 
 .pull-quote p {
-  font-family: 'Finlandica', sans-serif;
+  font-family: 'EB Garamond', serif;
   font-style: italic;
   font-size: 19px;
   color: var(--text);
@@ -204,7 +205,7 @@ a:hover {
 .pull-quote cite {
   display: block;
   margin-top: 8px;
-  font-family: 'Finlandica', sans-serif;
+  font-family: 'EB Garamond', serif;
   font-size: 15px;
   color: var(--text-light);
   font-style: normal;
@@ -215,7 +216,7 @@ a:hover {
 }
 
 .band-members-list p {
-  font-family: 'Finlandica', sans-serif;
+  font-family: 'EB Garamond', serif;
   font-size: 17px;
   line-height: 1.7;
   color: var(--text);
@@ -253,7 +254,7 @@ a:hover {
 }
 
 .show-month {
-  font-family: 'Josefin Sans', sans-serif;
+  font-family: 'EB Garamond', serif;
   font-weight: 400;
   font-size: 12px;
   text-transform: uppercase;
@@ -262,7 +263,7 @@ a:hover {
 }
 
 .show-day {
-  font-family: 'Black Han Sans', sans-serif;
+  font-family: 'EB Garamond', serif;
   font-size: 28px;
   font-weight: 400;
   line-height: 1;
@@ -276,14 +277,14 @@ a:hover {
 }
 
 .show-title {
-  font-family: 'Jura', sans-serif;
+  font-family: 'EB Garamond', serif;
   font-weight: 600;
   font-size: 18px;
   color: var(--text);
 }
 
 .show-detail {
-  font-family: 'Josefin Sans', sans-serif;
+  font-family: 'EB Garamond', serif;
   font-weight: 300;
   font-size: 12px;
   color: var(--red);
@@ -295,7 +296,7 @@ a:hover {
 
 .shows-loading,
 .shows-empty {
-  font-family: 'Finlandica', sans-serif;
+  font-family: 'EB Garamond', serif;
   font-size: 15px;
   color: var(--text-light);
   padding: 16px 0;
@@ -325,7 +326,7 @@ a:hover {
 }
 
 .track-num {
-  font-family: 'Josefin Sans', sans-serif;
+  font-family: 'EB Garamond', serif;
   font-weight: 300;
   font-size: 14px;
   color: var(--border);
@@ -338,14 +339,14 @@ a:hover {
 }
 
 .track-name {
-  font-family: 'Jura', sans-serif;
+  font-family: 'EB Garamond', serif;
   font-weight: 600;
   font-size: 17px;
   color: var(--text);
 }
 
 .track-meta {
-  font-family: 'Josefin Sans', sans-serif;
+  font-family: 'EB Garamond', serif;
   font-weight: 300;
   font-size: 12px;
   text-transform: uppercase;
@@ -361,7 +362,7 @@ a:hover {
 /* --- Buttons --- */
 .btn {
   display: inline-block;
-  font-family: 'Josefin Sans', sans-serif;
+  font-family: 'EB Garamond', serif;
   font-weight: 400;
   font-size: 14px;
   text-transform: uppercase;
@@ -395,7 +396,7 @@ a:hover {
 .mailing-form input {
   flex: 1;
   padding: 10px 14px;
-  font-family: 'Finlandica', sans-serif;
+  font-family: 'EB Garamond', serif;
   font-size: 16px;
   border: 1px solid var(--border);
   background: #fff;
@@ -422,7 +423,7 @@ a:hover {
 .contact-form textarea {
   width: 100%;
   padding: 10px 14px;
-  font-family: 'Finlandica', sans-serif;
+  font-family: 'EB Garamond', serif;
   font-size: 16px;
   background: #fff;
   border: 1px solid var(--border);
