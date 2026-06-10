@@ -3,7 +3,7 @@
    ============================================ */
 
 :root {
-  --cyan: hsl(192, 76%, 57%);
+  --cyan: hsl(200, 50%, 68%);
   --red: hsl(0, 73%, 41%);
   --red-hover: hsl(0, 69%, 55%);
   --text: hsl(0, 0%, 18%);
@@ -47,6 +47,7 @@ a:hover {
 .nav {
   background: hsl(0, 0%, 0%);
   padding: 0;
+  position: relative;
 }
 
 .nav-inner {
@@ -55,6 +56,7 @@ a:hover {
   align-items: center;
   justify-content: center;
   padding: 0;
+  gap: 0;
 }
 
 .nav-toggle {
@@ -100,6 +102,10 @@ a:hover {
   color: var(--red);
 }
 
+.nav-links a.active {
+  color: var(--cyan);
+}
+
 /* --- Hero --- */
 .hero {
   position: relative;
@@ -136,6 +142,7 @@ a:hover {
   position: relative;
   z-index: 2;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 100%;
@@ -148,16 +155,26 @@ a:hover {
   font-weight: 400;
   text-transform: uppercase;
   color: var(--cyan);
-  opacity: 0.51;
+  opacity: 0.88;
   line-height: 0.9;
   letter-spacing: 0;
   text-align: center;
   white-space: nowrap;
 }
 
+.hero-subtitle {
+  font-family: 'EB Garamond', sans-serif;
+  font-weight: 300;
+  font-size: clamp(13px, 2.5vw, 18px);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: hsl(0, 0%, 80%);
+  margin-top: 8px;
+}
+
 /* --- Sections --- */
 .section {
-  padding: 40px 20px;
+  padding: 64px 20px;
 }
 
 .container {
@@ -189,25 +206,28 @@ a:hover {
 }
 
 .pull-quote {
-  margin: 30px 0;
-  padding: 0;
+  margin: 0;
+  padding: 48px 20px;
   text-align: center;
+  background: hsl(0, 0%, 0%);
 }
 
 .pull-quote p {
   font-family: 'EB Garamond', serif;
   font-style: italic;
-  font-size: 19px;
-  color: var(--text);
+  font-size: 24px;
+  color: var(--cyan);
   line-height: 1.5;
+  max-width: 640px;
+  margin: 0 auto;
 }
 
 .pull-quote cite {
   display: block;
-  margin-top: 8px;
+  margin-top: 12px;
   font-family: 'EB Garamond', serif;
-  font-size: 20px;
-  color: var(--text-light);
+  font-size: 16px;
+  color: hsl(0, 0%, 55%);
   font-style: normal;
 }
 
@@ -449,6 +469,7 @@ a:hover {
   background: var(--red);
   color: #fff;
   border: none;
+  border-radius: 3px;
   cursor: pointer;
   text-decoration: none;
   transition: background 0.2s;
@@ -562,10 +583,15 @@ a:hover {
 
 .socials {
   display: flex;
-  gap: 16px;
+  gap: 20px;
   margin-top: 30px;
   align-items: center;
   justify-content: center;
+}
+
+.socials .social-link svg {
+  width: 28px;
+  height: 28px;
 }
 
 .social-link {
@@ -642,6 +668,11 @@ a:hover {
 
   .hero-title {
     font-size: 36px;
+  }
+
+  .hero-subtitle {
+    font-size: 11px;
+    letter-spacing: 0.15em;
   }
 
   .section-title {
