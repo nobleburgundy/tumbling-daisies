@@ -32,34 +32,23 @@
     var d = new Date(gig.date);
     var month = MONTHS[d.getMonth()];
     var day = String(d.getDate()).padStart(2, '0');
-    var venue = gig.venue || gig.title;
-    var location = gig.location || '';
-
+    var title = gig.title || '';
     var timeStr = gig.startTime ? formatTime(gig.startTime) : '';
-    var detail = [timeStr, gig.description].filter(Boolean).join(' \u2022 ');
 
-    var mapQuery = encodeURIComponent(venue + (location ? ' ' + location : ''));
-    var link = 'https://www.google.com/maps/search/' + mapQuery;
+    var div = document.createElement('div');
+    div.className = 'show-item';
 
-    var a = document.createElement('a');
-    a.href = link;
-    a.target = '_blank';
-    a.rel = 'noopener';
-    a.className = 'show-item';
-
-    a.innerHTML =
+    div.innerHTML =
       '<div class="show-date">' +
         '<span class="show-month">' + month + '</span>' +
         '<span class="show-day">' + day + '</span>' +
       '</div>' +
       '<div class="show-info">' +
-        '<span class="show-venue">' + venue + '</span>' +
-        (location ? '<span class="show-city">' + location + '</span>' : '') +
-        (detail ? '<span class="show-detail">' + detail + '</span>' : '') +
-      '</div>' +
-      '<span class="show-arrow">&rarr;</span>';
+        '<span class="show-title">' + title + '</span>' +
+        (timeStr ? '<span class="show-detail">' + timeStr + '</span>' : '') +
+      '</div>';
 
-    return a;
+    return div;
   }
 
   fetch('gigs.json')

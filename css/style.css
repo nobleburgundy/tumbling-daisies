@@ -237,27 +237,13 @@ a:hover {
   gap: 20px;
   padding: 16px 0;
   border-bottom: 1px solid var(--border);
-  text-decoration: none;
   color: var(--text);
-  transition: padding-left 0.3s;
 }
 
 .show-item:first-child {
   border-top: 1px solid var(--border);
 }
 
-.show-item:hover {
-  padding-left: 8px;
-}
-
-.show-item--highlight {
-  border-left: 3px solid var(--red);
-  padding-left: 12px;
-}
-
-.show-item--highlight:hover {
-  padding-left: 16px;
-}
 
 .show-date {
   display: flex;
@@ -289,18 +275,11 @@ a:hover {
   flex: 1;
 }
 
-.show-venue {
+.show-title {
   font-family: 'Jura', sans-serif;
   font-weight: 600;
   font-size: 18px;
   color: var(--text);
-}
-
-.show-city {
-  font-family: 'Finlandica', sans-serif;
-  font-size: 14px;
-  color: var(--text-light);
-  margin-top: 2px;
 }
 
 .show-detail {
@@ -313,17 +292,6 @@ a:hover {
   letter-spacing: 0.05em;
 }
 
-.show-arrow {
-  font-size: 18px;
-  opacity: 0.2;
-  transition: opacity 0.3s, transform 0.3s;
-  color: var(--text);
-}
-
-.show-item:hover .show-arrow {
-  opacity: 0.6;
-  transform: translateX(4px);
-}
 
 .shows-loading,
 .shows-empty {
