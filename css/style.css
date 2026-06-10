@@ -182,7 +182,7 @@ a:hover {
 
 .bio-text {
   font-family: 'EB Garamond', serif;
-  font-size: 17px;
+  font-size: 20px;
   line-height: 1.5;
   color: var(--text);
   margin-bottom: 16px;
@@ -206,7 +206,7 @@ a:hover {
   display: block;
   margin-top: 8px;
   font-family: 'EB Garamond', serif;
-  font-size: 15px;
+  font-size: 20px;
   color: var(--text-light);
   font-style: normal;
 }
@@ -217,9 +217,87 @@ a:hover {
 
 .band-members-list p {
   font-family: 'EB Garamond', serif;
-  font-size: 17px;
+  font-size: 20px;
   line-height: 1.7;
   color: var(--text);
+}
+
+/* --- Photos / Press Kit --- */
+.photos {
+  background: var(--bg-alt);
+}
+
+.photo-gallery {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.photo-item {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  line-height: 0;
+}
+
+.photo-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.photo-item:hover img {
+  transform: scale(1.03);
+}
+
+.photo-download {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: hsla(0, 0%, 0%, 0.6);
+  color: #fff;
+  border-radius: 50%;
+  text-decoration: none;
+  opacity: 0;
+  transition: opacity 0.2s, background 0.2s;
+}
+
+.photo-item:hover .photo-download {
+  opacity: 1;
+}
+
+.photo-download:hover {
+  background: var(--red);
+  color: #fff;
+}
+
+.photo-full {
+  grid-column: 1 / -1;
+}
+
+.photo-full img {
+  max-height: 400px;
+}
+
+.photo-half img {
+  aspect-ratio: 1 / 1;
+}
+
+@media (max-width: 768px) {
+  .photo-gallery {
+    grid-template-columns: 1fr;
+  }
+
+  .photo-half img {
+    aspect-ratio: auto;
+    max-height: 300px;
+  }
 }
 
 /* --- Shows --- */
