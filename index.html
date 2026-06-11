@@ -13,6 +13,8 @@
 </head>
 <body>
 
+  <div id="page-content">
+
   <!-- Navigation -->
   <nav class="nav" id="nav">
     <div class="nav-inner">
@@ -79,28 +81,8 @@
   <section class="section music" id="music">
     <div class="container">
       <h2 class="section-title">Music</h2>
-      <div class="tracks">
-        <div class="track">
-          <span class="track-num">01</span>
-          <div class="track-info">
-            <span class="track-name">Wasted and Alone</span>
-            <span class="track-meta">Studio &bull; 3:40</span>
-          </div>
-        </div>
-        <div class="track">
-          <span class="track-num">02</span>
-          <div class="track-info">
-            <span class="track-name">Dancing Sky</span>
-            <span class="track-meta">Live &bull; 3:39</span>
-          </div>
-        </div>
-        <div class="track">
-          <span class="track-num">03</span>
-          <div class="track-info">
-            <span class="track-name">Hang It on the Wall</span>
-            <span class="track-meta">Live &bull; 2:00</span>
-          </div>
-        </div>
+      <div class="tracks" id="tracks-list">
+        <p class="shows-loading">Loading tracks&hellip;</p>
       </div>
       <div class="music-cta">
         <a href="https://tumblingdaisies.bandcamp.com" target="_blank" rel="noopener" class="btn">Listen on Bandcamp</a>
@@ -133,6 +115,8 @@
       <span class="footer-copy">&copy; 2026 Tumbling Daisies</span>
     </div>
   </footer>
+
+  </div><!-- /page-content -->
 
   <script src="js/main.js"></script>
 </body>

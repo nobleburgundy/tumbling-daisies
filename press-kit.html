@@ -13,6 +13,8 @@
 </head>
 <body>
 
+  <div id="page-content">
+
   <!-- Navigation -->
   <nav class="nav" id="nav">
     <div class="nav-inner">
@@ -96,50 +98,8 @@
     </div>
   </footer>
 
+  </div><!-- /page-content -->
+
   <script src="js/main.js"></script>
-  <script>
-    (function () {
-      var gallery = document.getElementById('photo-gallery');
-      var downloadSvg = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>';
-
-      fetch('press-photos.json')
-        .then(function (r) { return r.json(); })
-        .then(function (photos) {
-          gallery.innerHTML = '';
-          photos.forEach(function (filename) {
-            var originalPath = 'assets/' + filename;
-            var thumbName = filename.replace(/\.\w+$/, '') + '.jpg';
-            var thumbPath = 'assets/press-thumbs/' + thumbName;
-            var label = filename
-              .replace(/^press-\d+-/, '')
-              .replace(/\.\w+$/, '')
-              .replace(/[-_]/g, ' ');
-            label = label.charAt(0).toUpperCase() + label.slice(1);
-
-            var div = document.createElement('div');
-            div.className = 'photo-item photo-half';
-
-            var img = document.createElement('img');
-            img.src = thumbPath;
-            img.alt = label;
-            img.loading = 'lazy';
-
-            var a = document.createElement('a');
-            a.href = originalPath;
-            a.download = '';
-            a.className = 'photo-download';
-            a.setAttribute('aria-label', 'Download full resolution photo');
-            a.innerHTML = downloadSvg;
-
-            div.appendChild(img);
-            div.appendChild(a);
-            gallery.appendChild(div);
-          });
-        })
-        .catch(function () {
-          gallery.innerHTML = '<p class="shows-empty">Unable to load photos.</p>';
-        });
-    })();
-  </script>
 </body>
 </html>
