@@ -59,7 +59,13 @@
   }
 
   function titleCase(str) {
-    return str.replace(/\b\w/g, function (c) { return c.toUpperCase(); });
+    var small = ['a','an','the','and','but','or','nor','for','yet','so','at','by','in','of','on','to','up','with'];
+    return str.replace(/\S+/g, function (word, i) {
+      if (i === 0 || small.indexOf(word.toLowerCase()) === -1) {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      }
+      return word.toLowerCase();
+    });
   }
 
   function showPlayer() {
