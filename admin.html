@@ -8,21 +8,28 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Sancreek&family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="assets/favicon.png">
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
   <style>
-    .admin-wrap {
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 60px 20px;
+    body {
+      display: flex;
+      min-height: 100vh;
+      background: #fff;
+      color: hsl(0, 0%, 20%);
     }
-    .admin-wrap, .admin-wrap * {
+    .admin-main {
+      flex: 1;
+      padding: 60px 40px;
+      min-width: 0;
+    }
+    .admin-main, .admin-main *,
+    .admin-sidebar, .admin-sidebar * {
       font-family: 'IBM Plex Mono', monospace;
     }
     .admin-title {
       font-size: 32px;
       font-weight: 600;
-      color: hsl(0, 0%, 80%);
+      color: hsl(0, 0%, 15%);
       margin-bottom: 40px;
     }
     .admin-section h2 {
@@ -33,14 +40,191 @@
       color: hsl(0, 0%, 55%);
       margin-bottom: 20px;
     }
+
+    /* Sidebar */
+    .admin-sidebar {
+      width: 380px;
+      flex-shrink: 0;
+      background: hsl(0, 0%, 97%);
+      border-left: 1px solid hsl(0, 0%, 88%);
+      padding: 60px 24px;
+      overflow-y: auto;
+    }
+    .sidebar-title {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: hsl(0, 0%, 45%);
+      margin-bottom: 24px;
+    }
+    .gig-card {
+      background: #fff;
+      border: 1px solid hsl(0, 0%, 85%);
+      border-radius: 6px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+    .gig-date {
+      font-size: 11px;
+      font-weight: 500;
+      color: hsl(50, 70%, 40%);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+    .gig-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: hsl(0, 0%, 15%);
+      margin-bottom: 4px;
+    }
+    .gig-venue {
+      font-size: 13px;
+      color: hsl(0, 0%, 45%);
+      margin-bottom: 4px;
+    }
+    .gig-location {
+      font-size: 12px;
+      color: hsl(0, 0%, 55%);
+      margin-bottom: 8px;
+    }
+    .gig-status {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 2px 8px;
+      border-radius: 3px;
+      margin-bottom: 8px;
+    }
+    .gig-status.confirmed {
+      background: hsla(120, 40%, 45%, 0.12);
+      color: hsl(120, 40%, 35%);
+    }
+    .gig-status.hold {
+      background: hsla(40, 60%, 50%, 0.15);
+      color: hsl(40, 55%, 38%);
+    }
+    .gig-description {
+      font-size: 12px;
+      font-weight: 300;
+      color: hsl(0, 0%, 45%);
+      line-height: 1.5;
+      margin-top: 8px;
+      white-space: pre-wrap;
+      border-top: 1px solid hsl(0, 0%, 90%);
+      padding-top: 8px;
+    }
+    .gig-time {
+      font-size: 12px;
+      color: hsl(0, 0%, 45%);
+      margin-bottom: 4px;
+    }
+    .gigs-empty {
+      font-size: 13px;
+      color: hsl(0, 0%, 55%);
+    }
+
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+      .admin-sidebar {
+        width: 100%;
+        border-left: none;
+        border-top: 1px solid hsl(0, 0%, 88%);
+      }
+    }
   </style>
 </head>
 <body>
 
-  <div class="admin-wrap">
-    <a href="index.html" style="color: hsl(0, 0%, 55%); font-size: 13px; text-decoration: none;">&larr; Back to site</a>
+  <div class="admin-main">
+    <a href="index.html" style="color: hsl(0, 0%, 45%); font-size: 13px; text-decoration: none;">&larr; Back to site</a>
     <h1 class="admin-title">Admin</h1>
   </div>
+
+  <aside class="admin-sidebar">
+    <div class="sidebar-title">Upcoming Gigs</div>
+    <div id="gigs-list">
+      <span class="gigs-empty">Loading...</span>
+    </div>
+  </aside>
+
+  <script>
+    (function () {
+      var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+      function fmtDate(dateStr) {
+        var d = new Date(dateStr);
+        return MONTHS[d.getUTCMonth()] + ' ' + d.getUTCDate() + ', ' + d.getUTCFullYear();
+      }
+
+      function fmtTime(isoString) {
+        var d = new Date(isoString);
+        var h = d.getHours();
+        var m = d.getMinutes();
+        var ampm = h >= 12 ? 'PM' : 'AM';
+        h = h % 12 || 12;
+        return h + (m ? ':' + (m < 10 ? '0' : '') + m : '') + ' ' + ampm;
+      }
+
+      function stripHtml(str) {
+        var tmp = document.createElement('div');
+        tmp.innerHTML = str;
+        return tmp.textContent || tmp.innerText || '';
+      }
+
+      fetch('gigs.json')
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+          var container = document.getElementById('gigs-list');
+          var now = new Date();
+          var todayStr = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+          var upcoming = (data.gigs || []).filter(function (g) {
+            return g.date >= todayStr;
+          });
+
+          if (upcoming.length === 0) {
+            container.innerHTML = '<span class="gigs-empty">No upcoming gigs.</span>';
+            return;
+          }
+
+          container.innerHTML = '';
+          upcoming.forEach(function (gig) {
+            var card = document.createElement('div');
+            card.className = 'gig-card';
+
+            var html = '<div class="gig-date">' + fmtDate(gig.date) + '</div>';
+            html += '<span class="gig-status ' + gig.status + '">' + gig.status + '</span>';
+            html += '<div class="gig-title">' + (gig.title || 'Untitled') + '</div>';
+
+            if (gig.venue && gig.venue !== gig.title) {
+              html += '<div class="gig-venue">' + gig.venue + '</div>';
+            }
+            if (gig.location) {
+              html += '<div class="gig-location">' + gig.location + '</div>';
+            }
+            if (gig.startTime) {
+              var timeStr = fmtTime(gig.startTime);
+              if (gig.endTime) timeStr += ' – ' + fmtTime(gig.endTime);
+              html += '<div class="gig-time">' + timeStr + '</div>';
+            }
+            if (gig.description) {
+              html += '<div class="gig-description">' + stripHtml(gig.description) + '</div>';
+            }
+
+            card.innerHTML = html;
+            container.appendChild(card);
+          });
+        })
+        .catch(function () {
+          document.getElementById('gigs-list').innerHTML = '<span class="gigs-empty">Could not load gigs.</span>';
+        });
+    })();
+  </script>
 
 </body>
 </html>
