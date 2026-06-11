@@ -416,14 +416,14 @@ a:hover {
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 14px 0;
+  padding: 14px 12px;
   border-bottom: 1px solid var(--border);
   cursor: pointer;
   transition: background 0.15s;
 }
 
 .track:hover {
-  background: var(--bg-alt);
+  background: hsl(0, 0%, 93%);
 }
 
 .track.is-active {
@@ -446,13 +446,15 @@ a:hover {
   font-family: 'EB Garamond', serif;
   font-weight: 300;
   font-size: 14px;
-  color: var(--border);
+  color: var(--text-light);
   min-width: 28px;
 }
 
 .track-info {
   display: flex;
   flex-direction: column;
+  flex: 1;
+  min-width: 0;
 }
 
 .track-name {
@@ -469,7 +471,27 @@ a:hover {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text-light);
-  margin-top: 2px;
+  white-space: nowrap;
+}
+
+.track-download {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border-radius: 4px;
+  color: var(--text-light);
+  transition: color 0.2s, background 0.2s;
+}
+
+.track-download:hover {
+  color: var(--cyan);
+  background: hsl(0, 0%, 90%);
+}
+
+.track-download:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
 }
 
 /* --- Sticky Player Bar --- */
@@ -786,6 +808,28 @@ body.has-player {
 
   .section-title {
     font-size: 24px;
+  }
+
+  .track {
+    gap: 12px;
+    padding: 12px 8px;
+  }
+
+  .track-num {
+    min-width: 22px;
+    font-size: 12px;
+  }
+
+  .track-name {
+    font-size: 15px;
+  }
+
+  .track-meta {
+    font-size: 11px;
+  }
+
+  .track-download {
+    padding: 8px;
   }
 
   .mailing-form {
