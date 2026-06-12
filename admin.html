@@ -62,8 +62,37 @@
       background: #fff;
       border: 1px solid hsl(0, 0%, 85%);
       border-radius: 6px;
-      padding: 16px;
       margin-bottom: 12px;
+    }
+    .gig-header {
+      padding: 12px 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+    }
+    .gig-header:hover {
+      background: hsl(0, 0%, 98%);
+    }
+    .gig-toggle {
+      font-size: 10px;
+      color: hsl(0, 0%, 55%);
+      flex-shrink: 0;
+      transition: transform 0.15s;
+    }
+    .gig-card.open .gig-toggle {
+      transform: rotate(90deg);
+    }
+    .gig-header-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .gig-details {
+      display: none;
+      padding: 0 16px 14px;
+    }
+    .gig-card.open .gig-details {
+      display: block;
     }
     .gig-date {
       font-size: 11px;
@@ -248,26 +277,37 @@
             var card = document.createElement('div');
             card.className = 'gig-card';
 
-            var html = '<div class="gig-date">' + fmtDate(gig.date) + '</div>';
-            html += '<span class="gig-status ' + gig.status + '">' + gig.status + '</span>';
-            html += '<div class="gig-title">' + (gig.title || 'Untitled') + '</div>';
+            // Collapsed header: date, status, title
+            var header = '<div class="gig-header">';
+            header += '<span class="gig-toggle">&#9654;</span>';
+            header += '<div class="gig-header-info">';
+            header += '<div class="gig-date">' + fmtDate(gig.date) + '</div>';
+            header += '<span class="gig-status ' + gig.status + '">' + gig.status + '</span>';
+            header += '<div class="gig-title">' + (gig.title || 'Untitled') + '</div>';
+            header += '</div></div>';
 
+            // Expandable details
+            var details = '<div class="gig-details">';
             if (gig.venue && gig.venue !== gig.title) {
-              html += '<div class="gig-venue">' + gig.venue + '</div>';
+              details += '<div class="gig-venue">' + gig.venue + '</div>';
             }
             if (gig.location) {
-              html += '<div class="gig-location">' + gig.location + '</div>';
+              details += '<div class="gig-location">' + gig.location + '</div>';
             }
             if (gig.startTime) {
               var timeStr = fmtTime(gig.startTime);
               if (gig.endTime) timeStr += ' – ' + fmtTime(gig.endTime);
-              html += '<div class="gig-time">' + timeStr + '</div>';
+              details += '<div class="gig-time">' + timeStr + '</div>';
             }
             if (gig.description) {
-              html += '<div class="gig-description">' + stripHtml(gig.description) + '</div>';
+              details += '<div class="gig-description">' + stripHtml(gig.description) + '</div>';
             }
+            details += '</div>';
 
-            card.innerHTML = html;
+            card.innerHTML = header + details;
+            card.querySelector('.gig-header').addEventListener('click', function () {
+              card.classList.toggle('open');
+            });
             container.appendChild(card);
           });
         })
