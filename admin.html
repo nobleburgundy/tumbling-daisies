@@ -126,6 +126,23 @@
       font-size: 13px;
       color: hsl(0, 0%, 55%);
     }
+    .subscriber-count {
+      font-size: 13px;
+      color: hsl(0, 0%, 45%);
+      margin-bottom: 12px;
+    }
+    .subscriber-item {
+      font-size: 13px;
+      color: hsl(0, 0%, 25%);
+      padding: 8px 0;
+      border-bottom: 1px solid hsl(0, 0%, 92%);
+      display: flex;
+      justify-content: space-between;
+    }
+    .subscriber-item .sub-date {
+      font-size: 11px;
+      color: hsl(0, 0%, 55%);
+    }
 
     @media (max-width: 768px) {
       body {
@@ -144,6 +161,13 @@
   <div class="admin-main">
     <a href="index.html" style="color: hsl(0, 0%, 45%); font-size: 13px; text-decoration: none;">&larr; Back to site</a>
     <h1 class="admin-title">Admin</h1>
+
+    <div class="admin-section">
+      <h2>Mailing List</h2>
+      <div id="subscribers-list">
+        <span class="gigs-empty">Loading subscribers...</span>
+      </div>
+    </div>
   </div>
 
   <aside class="admin-sidebar">
@@ -177,6 +201,33 @@
         return tmp.textContent || tmp.innerText || '';
       }
 
+      // --- Fetch subscribers ---
+      var SHEET_URL = 'https://script.google.com/macros/s/AKfycbxoeUEz50ZId9GLN3fDZ8Rz1vtyKNEE2F6SD6OjFawQG0HZRq9XCxNUYvmsASiFFu0M/exec';
+
+      fetch(SHEET_URL)
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+          var container = document.getElementById('subscribers-list');
+          var subs = data.subscribers || [];
+
+          if (subs.length === 0) {
+            container.innerHTML = '<span class="gigs-empty">No subscribers yet.</span>';
+            return;
+          }
+
+          var html = '<div class="subscriber-count">' + subs.length + ' subscriber' + (subs.length !== 1 ? 's' : '') + '</div>';
+          subs.forEach(function (sub) {
+            var date = sub.date ? new Date(sub.date).toLocaleDateString() : '';
+            html += '<div class="subscriber-item"><span>' + sub.email + '</span><span class="sub-date">' + date + '</span></div>';
+          });
+
+          container.innerHTML = html;
+        })
+        .catch(function () {
+          document.getElementById('subscribers-list').innerHTML = '<span class="gigs-empty">Could not load subscribers.</span>';
+        });
+
+      // --- Fetch gigs ---
       fetch('gigs.json')
         .then(function (res) { return res.json(); })
         .then(function (data) {

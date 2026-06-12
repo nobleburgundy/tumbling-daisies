@@ -410,12 +410,54 @@
     navigateTo(location.href, false);
   });
 
+  // --- Mailing list signup ---
+  var SHEET_URL = 'https://script.google.com/macros/s/AKfycbxoeUEz50ZId9GLN3fDZ8Rz1vtyKNEE2F6SD6OjFawQG0HZRq9XCxNUYvmsASiFFu0M/exec';
+
+  function initMailingForm() {
+    var form = document.getElementById('mailing-form');
+    if (!form) return;
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var msg = document.getElementById('form-msg');
+      var btn = form.querySelector('button');
+      var email = form.querySelector('input[name="email"]').value;
+
+      btn.disabled = true;
+      btn.textContent = 'Sending...';
+      msg.style.display = 'none';
+
+      fetch(SHEET_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'email=' + encodeURIComponent(email)
+      })
+      .then(function () {
+        msg.textContent = 'Thanks for subscribing!';
+        msg.style.color = '';
+        msg.style.display = 'block';
+        form.reset();
+      })
+      .catch(function () {
+        msg.textContent = 'Something went wrong. Please try again.';
+        msg.style.color = 'red';
+        msg.style.display = 'block';
+      })
+      .finally(function () {
+        btn.disabled = false;
+        btn.textContent = 'Subscribe';
+      });
+    });
+  }
+
   // --- Init page-specific features ---
   function initPage() {
     initMobileMenu();
     initShows();
     renderTrackList();
     initGallery();
+    initMailingForm();
   }
 
   // First load

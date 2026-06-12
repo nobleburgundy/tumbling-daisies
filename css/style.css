@@ -3,8 +3,8 @@
    ============================================ */
 
 :root {
-  --cyan: hsl(50, 90%, 60%);
-  --pull-quote-color: var(--cyan);
+  --accent: hsl(50, 90%, 60%);
+  --pull-quote-color: var(--accent);
   --red: hsl(50, 90%, 60%);
   --red-hover: hsl(50, 95%, 70%);
   --text: hsl(0, 0%, 18%);
@@ -104,7 +104,7 @@ a:hover {
 }
 
 .nav-links a.active {
-  color: var(--cyan);
+  color: var(--accent);
 }
 
 /* --- Hero --- */
@@ -155,7 +155,7 @@ a:hover {
   font-size: clamp(36px, 12vw, 161px);
   font-weight: 400;
   text-transform: uppercase;
-  color: var(--cyan);
+  color: var(--accent);
   opacity: 0.88;
   line-height: 0.9;
   letter-spacing: 0;
@@ -427,7 +427,7 @@ a:hover {
 }
 
 .track.is-active {
-  color: var(--cyan);
+  color: var(--accent);
 }
 
 .track.is-active .track-name {
@@ -485,12 +485,12 @@ a:hover {
 }
 
 .track-download:hover {
-  color: var(--cyan);
+  color: var(--accent);
   background: hsl(0, 0%, 90%);
 }
 
 .track-download:focus-visible {
-  outline: 2px solid var(--cyan);
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 
@@ -526,7 +526,7 @@ body.has-player {
 
 .player-bar-progress-fill {
   height: 100%;
-  background: var(--cyan);
+  background: var(--accent);
   width: 0%;
   transition: width 0.15s linear;
 }
@@ -542,7 +542,7 @@ body.has-player {
   font-family: 'EB Garamond', serif;
   font-weight: 100;
   font-size: 16px;
-  color: var(--cyan);
+  color: var(--accent);
   flex: 1;
   min-width: 0;
   white-space: nowrap;
