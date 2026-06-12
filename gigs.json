@@ -1,18 +1,6 @@
 {
-  "fetchedAt": "2026-06-11T13:16:07.796Z",
+  "fetchedAt": "2026-06-12T13:07:11.033Z",
   "gigs": [
-    {
-      "id": "5gdrghsqh9c980b6thdclb6avp",
-      "date": "2026-06-11",
-      "startTime": null,
-      "endTime": null,
-      "endDate": "2026-06-12",
-      "venue": "Chanhassen Summer Series",
-      "status": "confirmed",
-      "title": "Chanhassen Summer Series",
-      "location": "1456 W 78th St, Chanhassen",
-      "description": "630-8\n$1000\nSetup start at 4pm\nWe bring our own PA"
-    },
     {
       "id": "_8opkce9m6p23cb9p8l2k4b9k6134aba28crj0b9n75134h1o6krk8da28k",
       "date": "2026-07-17",
