@@ -155,6 +155,67 @@
       font-size: 13px;
       color: hsl(0, 0%, 55%);
     }
+    .gig-visibility-btn {
+      background: none;
+      border: 1px solid hsl(0, 0%, 82%);
+      border-radius: 4px;
+      padding: 3px 6px;
+      cursor: pointer;
+      font-size: 11px;
+      font-family: 'IBM Plex Mono', monospace;
+      color: hsl(0, 0%, 45%);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: 8px;
+    }
+    .gig-visibility-btn:hover {
+      background: hsl(0, 0%, 94%);
+    }
+    .gig-visibility-btn.is-hidden {
+      color: hsl(0, 70%, 50%);
+      border-color: hsl(0, 50%, 80%);
+    }
+    .gig-card.is-hidden .gig-header {
+      opacity: 0.45;
+    }
+    .hidden-gigs-export {
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid hsl(0, 0%, 88%);
+      display: none;
+    }
+    .hidden-gigs-export.has-changes {
+      display: block;
+    }
+    .hidden-gigs-export p {
+      font-size: 11px;
+      color: hsl(0, 0%, 50%);
+      margin-bottom: 8px;
+    }
+    .hidden-gigs-export pre {
+      font-size: 11px;
+      background: hsl(0, 0%, 94%);
+      border: 1px solid hsl(0, 0%, 85%);
+      border-radius: 4px;
+      padding: 8px 10px;
+      white-space: pre-wrap;
+      word-break: break-all;
+      margin-bottom: 8px;
+    }
+    .hidden-gigs-export button {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      background: hsl(0, 0%, 20%);
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 5px 12px;
+      cursor: pointer;
+    }
+    .hidden-gigs-export button:hover {
+      background: hsl(0, 0%, 30%);
+    }
     .subscriber-count {
       font-size: 13px;
       color: hsl(0, 0%, 45%);
@@ -203,6 +264,11 @@
     <div class="sidebar-title">Upcoming Gigs</div>
     <div id="gigs-list">
       <span class="gigs-empty">Loading...</span>
+    </div>
+    <div class="hidden-gigs-export" id="hidden-gigs-export">
+      <p>Hidden gigs changed. Update <code>hidden-gigs.json</code> with:</p>
+      <pre id="hidden-gigs-json"></pre>
+      <button id="copy-hidden-gigs">Copy to clipboard</button>
     </div>
   </aside>
 
@@ -256,8 +322,64 @@
           document.getElementById('subscribers-list').innerHTML = '<span class="gigs-empty">Could not load subscribers.</span>';
         });
 
+      // --- Hidden gigs ---
+      var hiddenGigIds = [];
+      var savedHiddenGigIds = [];
+
+      function loadSavedHiddenGigs() {
+        return fetch('hidden-gigs.json')
+          .then(function (res) { return res.json(); })
+          .then(function (ids) {
+            savedHiddenGigIds = ids || [];
+            hiddenGigIds = savedHiddenGigIds.slice();
+          })
+          .catch(function () {
+            savedHiddenGigIds = [];
+            hiddenGigIds = [];
+          });
+      }
+
+      function updateExportPanel() {
+        var panel = document.getElementById('hidden-gigs-export');
+        var pre = document.getElementById('hidden-gigs-json');
+        var same = JSON.stringify(hiddenGigIds.sort()) === JSON.stringify(savedHiddenGigIds.sort());
+        if (same) {
+          panel.classList.remove('has-changes');
+        } else {
+          panel.classList.add('has-changes');
+          pre.textContent = JSON.stringify(hiddenGigIds, null, 2);
+        }
+      }
+
+      function toggleGigVisibility(gigId, card, btn) {
+        var idx = hiddenGigIds.indexOf(gigId);
+        if (idx === -1) {
+          hiddenGigIds.push(gigId);
+          card.classList.add('is-hidden');
+          btn.classList.add('is-hidden');
+          btn.textContent = 'hidden';
+        } else {
+          hiddenGigIds.splice(idx, 1);
+          card.classList.remove('is-hidden');
+          btn.classList.remove('is-hidden');
+          btn.textContent = 'visible';
+        }
+        updateExportPanel();
+      }
+
+      document.getElementById('copy-hidden-gigs').addEventListener('click', function () {
+        var text = JSON.stringify(hiddenGigIds, null, 2);
+        navigator.clipboard.writeText(text).then(function () {
+          var btn = document.getElementById('copy-hidden-gigs');
+          btn.textContent = 'Copied!';
+          setTimeout(function () { btn.textContent = 'Copy to clipboard'; }, 1500);
+        });
+      });
+
       // --- Fetch gigs ---
-      fetch('gigs.json')
+      loadSavedHiddenGigs().then(function () {
+        return fetch('gigs.json');
+      })
         .then(function (res) { return res.json(); })
         .then(function (data) {
           var container = document.getElementById('gigs-list');
@@ -274,8 +396,9 @@
 
           container.innerHTML = '';
           upcoming.forEach(function (gig) {
+            var isHidden = hiddenGigIds.indexOf(gig.id) !== -1;
             var card = document.createElement('div');
-            card.className = 'gig-card';
+            card.className = 'gig-card' + (isHidden ? ' is-hidden' : '');
 
             // Collapsed header: date, status, title
             var header = '<div class="gig-header">';
@@ -302,11 +425,17 @@
             if (gig.description) {
               details += '<div class="gig-description">' + stripHtml(gig.description) + '</div>';
             }
+            details += '<button class="gig-visibility-btn' + (isHidden ? ' is-hidden' : '') + '">' + (isHidden ? 'hidden' : 'visible') + '</button>';
             details += '</div>';
 
             card.innerHTML = header + details;
             card.querySelector('.gig-header').addEventListener('click', function () {
               card.classList.toggle('open');
+            });
+            var visBtn = card.querySelector('.gig-visibility-btn');
+            visBtn.addEventListener('click', function (e) {
+              e.stopPropagation();
+              toggleGigVisibility(gig.id, card, visBtn);
             });
             container.appendChild(card);
           });

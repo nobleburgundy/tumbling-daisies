@@ -2,10 +2,12 @@
   "name": "tumbling-daisies",
   "private": true,
   "scripts": {
-    "fetch-gigs": "node scripts/fetch-gigs.js"
+    "fetch-gigs": "node scripts/fetch-gigs.js",
+    "update-music": "node scripts/update-music.mjs"
   },
   "dependencies": {
     "dotenv": "^16.4.7",
-    "googleapis": "^144.0.0"
+    "googleapis": "^144.0.0",
+    "music-metadata": "^11.13.0"
   }
 }

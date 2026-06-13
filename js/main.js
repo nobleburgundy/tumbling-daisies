@@ -23,7 +23,10 @@
         '<div class="player-bar-progress-fill" id="player-bar-progress-fill"></div>' +
       '</div>' +
       '<div class="player-bar-row">' +
-        '<span class="player-bar-title" id="player-bar-title">&mdash;</span>' +
+        '<div class="player-bar-title-group">' +
+          '<span class="player-bar-title" id="player-bar-title">&mdash;</span>' +
+          '<span class="player-bar-album" id="player-bar-album"></span>' +
+        '</div>' +
         '<div class="player-bar-controls">' +
           '<button class="player-bar-btn" id="pb-prev" aria-label="Previous track">' +
             '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg>' +
@@ -42,6 +45,7 @@
   document.body.appendChild(playerBar);
 
   var pbTitle = document.getElementById('player-bar-title');
+  var pbAlbum = document.getElementById('player-bar-album');
   var pbPlay = document.getElementById('pb-play');
   var pbPrev = document.getElementById('pb-prev');
   var pbNext = document.getElementById('pb-next');
@@ -95,6 +99,8 @@
     var t = tracks[index];
     audio.src = t.src;
     pbTitle.textContent = t.name;
+    pbAlbum.textContent = t.album || '';
+    pbAlbum.style.display = t.album ? '' : 'none';
     pbProgressFill.style.width = '0%';
     pbTime.textContent = '0:00 / ' + (t.duration ? formatTime(t.duration) : '0:00');
     highlightTrackInList();
@@ -114,10 +120,12 @@
     return fetch('music.json')
       .then(function (r) { return r.json(); })
       .then(function (files) {
-        files.forEach(function (filename, i) {
+        files.forEach(function (entry, i) {
+          var filename = typeof entry === 'string' ? entry : entry.file;
+          var album = (typeof entry === 'object' && entry.album) ? entry.album : '';
           var src = 'assets/music/' + filename;
           var name = titleCase(filename.replace(/\.\w+$/, ''));
-          var t = { src: src, name: name, duration: 0 };
+          var t = { src: src, name: name, album: album, duration: 0 };
           tracks.push(t);
 
           var probe = new Audio();
@@ -237,13 +245,17 @@
       return h + (m ? ':' + (m < 10 ? '0' : '') + m : '') + ' ' + ampm;
     }
 
-    fetch('gigs.json')
-      .then(function (res) { return res.json(); })
-      .then(function (data) {
+    Promise.all([
+      fetch('gigs.json').then(function (res) { return res.json(); }),
+      fetch('hidden-gigs.json').then(function (res) { return res.json(); }).catch(function () { return []; })
+    ])
+      .then(function (results) {
+        var data = results[0];
+        var hiddenIds = results[1] || [];
         var now = new Date();
         var todayStr = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
         var upcoming = (data.gigs || []).filter(function (g) {
-          return g.date >= todayStr && g.status === 'confirmed';
+          return g.date >= todayStr && g.status === 'confirmed' && hiddenIds.indexOf(g.id) === -1;
         });
 
         container.innerHTML = '';
