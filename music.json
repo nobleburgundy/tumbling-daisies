@@ -1,26 +1,24 @@
 [
   {
+    "file": "too tall grass.mp3",
+    "album": "Live at the White Squirrel"
+  },
+  {
     "file": "dancing sky.mp3",
     "album": "Live at the White Squirrel"
   },
   {
     "file": "hang it on the wall.mp3",
-    "album": "Live at the White Squirrel"
-  },
-  {
-    "file": "last man with the blues.mp3",
-    "album": "Live at the White Squirrel"
+    "album": "Live at the White Squirrel",
+    "songwriter": "Charlie Patton"
   },
   {
     "file": "the drifter.mp3",
     "album": "Live at the White Squirrel"
   },
   {
-    "file": "too tall grass.mp3",
-    "album": "Live at the White Squirrel"
-  },
-  {
     "file": "white freightliner blues.mp3",
-    "album": "Live at the White Squirrel"
+    "album": "Live at the White Squirrel",
+    "songwriter": "Townes Van Zandt"
   }
 ]
