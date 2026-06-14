@@ -234,6 +234,121 @@
       color: hsl(0, 0%, 55%);
     }
 
+    /* Analytics */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: hsl(0, 0%, 97%);
+      border: 1px solid hsl(0, 0%, 88%);
+      border-radius: 6px;
+      padding: 14px 16px;
+    }
+    .stat-label {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: hsl(0, 0%, 55%);
+      margin-bottom: 6px;
+    }
+    .stat-value {
+      font-size: 24px;
+      font-weight: 600;
+      color: hsl(0, 0%, 15%);
+    }
+    .top-pages-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .top-pages-list li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid hsl(0, 0%, 92%);
+      font-size: 13px;
+    }
+    .top-pages-list .page-path {
+      color: hsl(0, 0%, 25%);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex: 1;
+      min-width: 0;
+    }
+    .top-pages-list .page-count {
+      color: hsl(0, 0%, 45%);
+      font-size: 12px;
+      margin-left: 12px;
+      flex-shrink: 0;
+    }
+    .stats-bar {
+      height: 4px;
+      background: hsl(0, 0%, 90%);
+      border-radius: 2px;
+      margin-top: 4px;
+    }
+    .stats-bar-fill {
+      height: 100%;
+      background: hsl(50, 70%, 40%);
+      border-radius: 2px;
+    }
+    .stats-error {
+      font-size: 12px;
+      color: hsl(0, 50%, 50%);
+    }
+    .stats-dashboard-link {
+      display: inline-block;
+      font-size: 12px;
+      color: hsl(0, 0%, 45%);
+      margin-bottom: 20px;
+    }
+    .stats-token-form {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .stats-token-form input {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      border: 1px solid hsl(0, 0%, 82%);
+      border-radius: 4px;
+      padding: 5px 10px;
+      flex: 1;
+      min-width: 0;
+      color: hsl(0, 0%, 25%);
+    }
+    .stats-token-form input::placeholder {
+      color: hsl(0, 0%, 65%);
+    }
+    .stats-token-form button,
+    .stats-token-clear {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      border: 1px solid hsl(0, 0%, 82%);
+      border-radius: 4px;
+      padding: 5px 12px;
+      cursor: pointer;
+      background: #fff;
+      color: hsl(0, 0%, 35%);
+      white-space: nowrap;
+    }
+    .stats-token-form button:hover,
+    .stats-token-clear:hover {
+      background: hsl(0, 0%, 94%);
+    }
+    .stats-token-status {
+      font-size: 11px;
+      color: hsl(120, 40%, 35%);
+      margin-bottom: 16px;
+    }
+
     @media (max-width: 768px) {
       body {
         flex-direction: column;
@@ -256,6 +371,13 @@
       <h2>Mailing List</h2>
       <div id="subscribers-list">
         <span class="gigs-empty">Loading subscribers...</span>
+      </div>
+    </div>
+
+    <div class="admin-section" style="margin-top: 40px;">
+      <h2>Site Analytics</h2>
+      <div id="analytics-container">
+        <span class="gigs-empty">Loading analytics...</span>
       </div>
     </div>
   </div>
@@ -443,6 +565,122 @@
         .catch(function () {
           document.getElementById('gigs-list').innerHTML = '<span class="gigs-empty">Could not load gigs.</span>';
         });
+    })();
+  </script>
+
+  <script>
+    (function () {
+      var GC_SITE = 'tumblingdaisies';
+      var BASE = 'https://' + GC_SITE + '.goatcounter.com';
+      var container = document.getElementById('analytics-container');
+
+      function fmtNum(n) {
+        return n.toLocaleString();
+      }
+
+      function isoDate(d) {
+        return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+      }
+
+      function renderChrome() {
+        var token = localStorage.getItem('goatcounter_token');
+        var html = '<a class="stats-dashboard-link" href="' + BASE + '" target="_blank">View full dashboard on GoatCounter &rarr;</a>';
+
+        if (token) {
+          html += '<div class="stats-token-status">API token saved <button class="stats-token-clear" id="clear-token">Clear token</button></div>';
+        } else {
+          html += '<div class="stats-token-form" id="token-form">' +
+            '<input type="password" id="token-input" placeholder="Paste GoatCounter API token">' +
+            '<button id="save-token">Save</button>' +
+            '</div>';
+        }
+
+        html += '<div id="stats-content"></div>';
+        container.innerHTML = html;
+
+        if (token) {
+          document.getElementById('clear-token').addEventListener('click', function () {
+            localStorage.removeItem('goatcounter_token');
+            renderChrome();
+          });
+          loadStats(token);
+        } else {
+          document.getElementById('save-token').addEventListener('click', saveToken);
+          document.getElementById('token-input').addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') saveToken();
+          });
+        }
+      }
+
+      function saveToken() {
+        var val = document.getElementById('token-input').value.trim();
+        if (!val) return;
+        localStorage.setItem('goatcounter_token', val);
+        renderChrome();
+      }
+
+      function loadStats(token) {
+        var statsEl = document.getElementById('stats-content');
+        statsEl.innerHTML = '<span class="gigs-empty">Loading stats...</span>';
+        var headers = { 'Authorization': 'Bearer ' + token };
+
+        var now = new Date();
+        var d7 = new Date(now); d7.setDate(d7.getDate() - 7);
+        var d30 = new Date(now); d30.setDate(d30.getDate() - 30);
+
+        var totalUrl7 = BASE + '/api/v1/stats/total?start=' + isoDate(d7) + '&end=' + isoDate(now);
+        var totalUrl30 = BASE + '/api/v1/stats/total?start=' + isoDate(d30) + '&end=' + isoDate(now);
+        var pagesUrl = BASE + '/api/v1/stats/hits?start=' + isoDate(d30) + '&end=' + isoDate(now) + '&limit=10';
+
+        Promise.all([
+          fetch(totalUrl7, { headers: headers }).then(function (r) { return r.json(); }),
+          fetch(totalUrl30, { headers: headers }).then(function (r) { return r.json(); }),
+          fetch(pagesUrl, { headers: headers }).then(function (r) { return r.json(); })
+        ]).then(function (results) {
+          var total7 = results[0];
+          var total30 = results[1];
+          var pages = results[2];
+
+          if (total7.error || total30.error) {
+            statsEl.innerHTML = '<span class="stats-error">API error: ' + (total7.error || total30.error) + '</span>';
+            return;
+          }
+
+          var views7 = total7.total || 0;
+          var visits7 = total7.total_unique || 0;
+          var views30 = total30.total || 0;
+
+          var html = '<div class="stats-grid">';
+          html += '<div class="stat-card"><div class="stat-label">Views (7d)</div><div class="stat-value">' + fmtNum(views7) + '</div></div>';
+          html += '<div class="stat-card"><div class="stat-label">Visitors (7d)</div><div class="stat-value">' + fmtNum(visits7) + '</div></div>';
+          html += '<div class="stat-card"><div class="stat-label">Views (30d)</div><div class="stat-value">' + fmtNum(views30) + '</div></div>';
+          html += '</div>';
+
+          var hits = (pages.hits || []);
+          if (hits.length > 0) {
+            var maxCount = hits[0].count || 1;
+            html += '<h3 style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.1em;color:hsl(0,0%,55%);margin-bottom:12px;">Top Pages (30d)</h3>';
+            html += '<ul class="top-pages-list">';
+            hits.forEach(function (page) {
+              var pct = Math.round(((page.count || 0) / maxCount) * 100);
+              html += '<li>';
+              html += '<div style="flex:1;min-width:0;">';
+              html += '<span class="page-path">' + (page.path || '/') + '</span>';
+              html += '<div class="stats-bar"><div class="stats-bar-fill" style="width:' + pct + '%"></div></div>';
+              html += '</div>';
+              html += '<span class="page-count">' + fmtNum(page.count || 0) + '</span>';
+              html += '</li>';
+            });
+            html += '</ul>';
+          }
+
+          statsEl.innerHTML = html;
+        }).catch(function () {
+          statsEl.innerHTML = '<span class="stats-error">Could not load analytics. Check your API token.</span>';
+        });
+      }
+
+      renderChrome();
     })();
   </script>
 
