@@ -331,6 +331,28 @@ a:hover {
   flex-direction: column;
 }
 
+.bit-follow-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 20px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.03em;
+  color: var(--text-light);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.bit-follow-link:hover {
+  color: var(--text);
+}
+
+.bit-follow-link svg {
+  width: 16px;
+  height: 16px;
+}
+
 .show-item {
   display: flex;
   align-items: center;
