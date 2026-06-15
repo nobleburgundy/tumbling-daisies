@@ -882,10 +882,6 @@ body.has-player {
     object-position: calc(50% + 75px) bottom;
   }
 
-  .hero-title {
-    font-size: 36px;
-  }
-
   .hero-subtitle {
     font-size: 11px;
     letter-spacing: 0.15em;
