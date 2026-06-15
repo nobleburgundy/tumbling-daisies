@@ -437,6 +437,69 @@
       border-color: hsl(0, 0%, 20%);
     }
 
+    /* Login gate */
+    .login-gate {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .login-box {
+      text-align: center;
+      max-width: 320px;
+      width: 100%;
+      padding: 0 20px;
+    }
+    .login-box h1 {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 22px;
+      font-weight: 600;
+      color: hsl(0, 0%, 15%);
+      margin-bottom: 24px;
+    }
+    .login-box input {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 14px;
+      width: 100%;
+      box-sizing: border-box;
+      border: 1px solid hsl(0, 0%, 80%);
+      border-radius: 4px;
+      padding: 10px 14px;
+      color: hsl(0, 0%, 20%);
+      margin-bottom: 12px;
+    }
+    .login-box input:focus {
+      outline: none;
+      border-color: hsl(0, 0%, 55%);
+    }
+    .login-box button {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 4px;
+      background: hsl(0, 0%, 20%);
+      color: #fff;
+      cursor: pointer;
+    }
+    .login-box button:hover {
+      background: hsl(0, 0%, 30%);
+    }
+    .login-error {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: hsl(0, 50%, 50%);
+      margin-top: 10px;
+      display: none;
+    }
+    body.authenticated .login-gate { display: none; }
+    body:not(.authenticated) .admin-main,
+    body:not(.authenticated) .admin-sidebar { visibility: hidden; }
+
     @media (max-width: 768px) {
       body {
         flex-direction: column;
@@ -450,6 +513,122 @@
   </style>
 </head>
 <body>
+
+  <div class="login-gate" id="login-gate">
+    <div class="login-box">
+      <h1>Admin Login</h1>
+      <input type="password" id="login-password" placeholder="Password" autofocus>
+      <button id="login-submit">Enter</button>
+      <div class="login-error" id="login-error">Incorrect password.</div>
+      <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: hsl(0, 0%, 55%); margin-top: 16px;">Hint: The hammiest jammer is (include space in name)?</div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var PASSWORD_HASH = '9378398ceaa828f00da9550ed92c743296cb4e0e81e9c0f9891c8bf605d95294';
+      var MAX_ATTEMPTS = 5;
+      var LOCKOUT_MS = 30 * 60 * 1000; // 30 minutes
+
+      async function sha256(str) {
+        var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+        return Array.from(new Uint8Array(buf)).map(function (b) { return b.toString(16).padStart(2, '0'); }).join('');
+      }
+
+      function unlock() {
+        document.body.classList.add('authenticated');
+        sessionStorage.setItem('admin_auth', '1');
+        localStorage.removeItem('admin_lockout');
+        localStorage.removeItem('admin_attempts');
+      }
+
+      function getAttempts() {
+        return parseInt(localStorage.getItem('admin_attempts') || '0', 10);
+      }
+
+      function setAttempts(n) {
+        localStorage.setItem('admin_attempts', String(n));
+      }
+
+      function getLockoutEnd() {
+        var val = localStorage.getItem('admin_lockout');
+        return val ? parseInt(val, 10) : 0;
+      }
+
+      function lockOut() {
+        var until = Date.now() + LOCKOUT_MS;
+        localStorage.setItem('admin_lockout', String(until));
+        showLockoutMessage(until);
+      }
+
+      function showLockoutMessage(until) {
+        var errEl = document.getElementById('login-error');
+        var pwInput = document.getElementById('login-password');
+        var submitBtn = document.getElementById('login-submit');
+        pwInput.disabled = true;
+        submitBtn.disabled = true;
+        submitBtn.style.opacity = '0.5';
+
+        function updateMsg() {
+          var remaining = until - Date.now();
+          if (remaining <= 0) {
+            localStorage.removeItem('admin_lockout');
+            localStorage.removeItem('admin_attempts');
+            pwInput.disabled = false;
+            submitBtn.disabled = false;
+            submitBtn.style.opacity = '1';
+            errEl.textContent = 'Incorrect password.';
+            errEl.style.display = 'none';
+            return;
+          }
+          var mins = Math.ceil(remaining / 60000);
+          errEl.textContent = 'Too many attempts. Try again in ' + mins + ' min.';
+          errEl.style.display = 'block';
+          setTimeout(updateMsg, 30000);
+        }
+        updateMsg();
+      }
+
+      // If already authenticated this session, skip the prompt
+      if (sessionStorage.getItem('admin_auth') === '1') {
+        unlock();
+      }
+
+      // Check for active lockout on page load
+      var lockoutEnd = getLockoutEnd();
+      if (lockoutEnd > Date.now()) {
+        showLockoutMessage(lockoutEnd);
+      }
+
+      document.getElementById('login-submit').addEventListener('click', tryLogin);
+      document.getElementById('login-password').addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') tryLogin();
+      });
+
+      async function tryLogin() {
+        if (getLockoutEnd() > Date.now()) return;
+
+        var pw = document.getElementById('login-password').value;
+        var hash = await sha256(pw);
+        if (hash === PASSWORD_HASH) {
+          unlock();
+        } else {
+          var attempts = getAttempts() + 1;
+          setAttempts(attempts);
+          if (attempts >= MAX_ATTEMPTS) {
+            lockOut();
+          } else {
+            var left = MAX_ATTEMPTS - attempts;
+            var errEl = document.getElementById('login-error');
+            errEl.textContent = 'Incorrect password. ' + left + ' attempt' + (left !== 1 ? 's' : '') + ' remaining.';
+            errEl.style.display = 'block';
+          }
+          document.getElementById('login-password').value = '';
+          document.getElementById('login-password').focus();
+        }
+      }
+    })();
+  </script>
 
   <div class="admin-main">
     <a href="index.html" style="color: hsl(0, 0%, 45%); font-size: 13px; text-decoration: none;">&larr; Back to site</a>
