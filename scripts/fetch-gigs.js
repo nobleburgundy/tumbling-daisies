@@ -22,6 +22,86 @@ function getAuth() {
   });
 }
 
+// ---- Metadata tag parsing from description ----
+// Tags are "Key: Value" lines in the description. Parsed tags are stripped from the
+// description text written to gigs.json (the Google Calendar event is never modified).
+// "Pay" is intentionally excluded from output.
+
+const METADATA_TAGS = [
+  { key: 'showtime',    pattern: /^showtime\s*:\s*(.+)/i },
+  { key: 'ticketLink',  pattern: /^ticket\s*link\s*:\s*(.+)/i },
+  { key: 'ticketType',  pattern: /^ticket\s*type\s*:\s*(.+)/i },
+  { key: 'ticketLink2', pattern: /^ticket\s*link\s*2\s*:\s*(.+)/i },
+  { key: 'ticketType2', pattern: /^ticket\s*type\s*2\s*:\s*(.+)/i },
+  { key: 'onSaleDate',  pattern: /^on-?\s*sale\s*date\s*:\s*(.+)/i },
+  { key: 'onSaleTime',  pattern: /^on-?\s*sale\s*time\s*:\s*(.+)/i },
+  { key: 'lineup',      pattern: /^lineup\s*:\s*(.+)/i },
+  { key: 'eventName',   pattern: /^event\s*name\s*:\s*(.+)/i },
+  { key: 'eventImage',  pattern: /^event\s*image\s*:\s*(.+)/i },
+  { key: 'cover',       pattern: /^cover\s*:\s*(.+)/i },
+  { key: 'age',         pattern: /^age\s*:\s*(.+)/i },
+  { key: 'streamingLink', pattern: /^streaming\s*link\s*:\s*(.+)/i },
+  { key: 'scheduledDate', pattern: /^scheduled\s*date\s*:\s*(.+)/i },
+  { key: 'scheduledTime', pattern: /^scheduled\s*time\s*:\s*(.+)/i },
+];
+
+// Tags that are parsed but excluded from gigs.json output (sensitive data)
+const EXCLUDED_TAGS = ['pay'];
+const EXCLUDED_PATTERNS = [
+  /^pay\s*:\s*(.+)/i,
+];
+
+function parseMetadata(description) {
+  if (!description) return { metadata: {}, cleanDescription: '' };
+
+  // Normalize HTML line breaks to newlines for parsing
+  let text = description.replace(/<br\s*\/?>/gi, '\n');
+  // Strip HTML tags for matching
+  text = text.replace(/<[^>]+>/g, '');
+  // Decode common HTML entities
+  text = text.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"');
+
+  const lines = text.split('\n');
+  const metadata = {};
+  const keepLines = [];
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    let matched = false;
+
+    // Check for excluded tags (parse & discard)
+    for (const pat of EXCLUDED_PATTERNS) {
+      if (pat.test(trimmed)) { matched = true; break; }
+    }
+    if (matched) continue;
+
+    // Check for metadata tags
+    for (const tag of METADATA_TAGS) {
+      const m = trimmed.match(tag.pattern);
+      if (m) {
+        metadata[tag.key] = m[1].trim();
+        matched = true;
+        break;
+      }
+    }
+    if (!matched) keepLines.push(line);
+  }
+
+  return {
+    metadata,
+    cleanDescription: keepLines.join('\n').replace(/\n{3,}/g, '\n\n').trim(),
+  };
+}
+
+// ---- Location parsing ----
+function parseLocation(location) {
+  if (!location) return { city: null, region: null };
+  // Try to match "City, ST" or "City, State" patterns
+  const match = location.match(/([^,]+),\s*([A-Z]{2})\b/);
+  if (match) return { city: match[1].trim(), region: match[2] };
+  return { city: null, region: null };
+}
+
 // ---- Event parsing (adapted from gig-list) ----
 function matchesBand(event) {
   const title = event.summary || '';
@@ -55,6 +135,10 @@ function parseVenue(event) {
 }
 
 function parseEvent(event) {
+  const { metadata, cleanDescription } = parseMetadata(event.description || '');
+  const location = event.location || '';
+  const { city, region } = parseLocation(location);
+
   return {
     id:          event.id,
     date:        event.start?.dateTime || event.start?.date || null,
@@ -64,8 +148,25 @@ function parseEvent(event) {
     venue:       parseVenue(event),
     status:      parseStatus(event),
     title:       (event.summary || '').replace(/^\(C\)\s*/i, '').replace(/\bTD\s*(?:at|@)\s*/i, '').replace(/\bTD Trio\b/g, 'Tumbling Daisies Trio'),
-    location:    event.location    || '',
-    description: event.description || '',
+    location,
+    city:          city || null,
+    region:        region || null,
+    showtime:      metadata.showtime || null,
+    ticketLink:    metadata.ticketLink || null,
+    ticketType:    metadata.ticketType || null,
+    ticketLink2:   metadata.ticketLink2 || null,
+    ticketType2:   metadata.ticketType2 || null,
+    onSaleDate:    metadata.onSaleDate || null,
+    onSaleTime:    metadata.onSaleTime || null,
+    lineup:        metadata.lineup || null,
+    eventName:     metadata.eventName || null,
+    eventImage:    metadata.eventImage || null,
+    cover:         metadata.cover || null,
+    age:           metadata.age || null,
+    streamingLink: metadata.streamingLink || null,
+    scheduledDate: metadata.scheduledDate || null,
+    scheduledTime: metadata.scheduledTime || null,
+    description:   cleanDescription,
   };
 }
 

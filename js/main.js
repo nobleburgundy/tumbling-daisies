@@ -267,8 +267,18 @@
           var d = new Date(gig.date);
           var month = MONTHS[d.getUTCMonth()];
           var day = String(d.getUTCDate()).padStart(2, '0');
-          var title = gig.title || '';
-          var timeStr = gig.startTime ? fmtTime(gig.startTime) : '';
+          var title = gig.eventName || gig.title || '';
+          var timeStr = gig.showtime || (gig.startTime ? fmtTime(gig.startTime) : '');
+
+          var details = '';
+          if (timeStr) details += '<span class="show-detail">' + timeStr + '</span>';
+          if (gig.cover) details += '<span class="show-detail">' + gig.cover + '</span>';
+          if (gig.age) details += '<span class="show-detail">' + gig.age + '</span>';
+          if (gig.lineup) details += '<span class="show-detail show-lineup">' + gig.lineup + '</span>';
+          if (gig.ticketLink) {
+            var label = gig.ticketType || 'Tickets';
+            details += '<a class="show-detail show-ticket-link" href="' + gig.ticketLink + '" target="_blank" rel="noopener">' + label + '</a>';
+          }
 
           var div = document.createElement('div');
           div.className = 'show-item';
@@ -279,7 +289,7 @@
             '</div>' +
             '<div class="show-info">' +
               '<span class="show-title">' + title + '</span>' +
-              (timeStr ? '<span class="show-detail">' + timeStr + '</span>' : '') +
+              details +
             '</div>';
           container.appendChild(div);
         });
