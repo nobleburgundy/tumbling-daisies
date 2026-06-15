@@ -43,6 +43,7 @@ const METADATA_TAGS = [
   { key: 'streamingLink', pattern: /^streaming\s*link\s*:\s*(.+)/i },
   { key: 'scheduledDate', pattern: /^scheduled\s*date\s*:\s*(.+)/i },
   { key: 'scheduledTime', pattern: /^scheduled\s*time\s*:\s*(.+)/i },
+  { key: 'bitDescription', pattern: /^description\s*:\s*(.+)/i },
 ];
 
 // Tags that are parsed but excluded from gigs.json output (sensitive data)
@@ -166,6 +167,7 @@ function parseEvent(event) {
     streamingLink: metadata.streamingLink || null,
     scheduledDate: metadata.scheduledDate || null,
     scheduledTime: metadata.scheduledTime || null,
+    bitDescription: metadata.bitDescription || null,
     description:   cleanDescription,
   };
 }

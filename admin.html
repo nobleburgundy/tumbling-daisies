@@ -497,6 +497,263 @@
     body:not(.authenticated) .admin-main,
     body:not(.authenticated) .admin-sidebar { visibility: hidden; }
 
+    /* BIT Export */
+    .bit-defaults {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .bit-defaults label {
+      font-size: 12px;
+      color: hsl(0, 0%, 45%);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .bit-defaults input, .bit-defaults select {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      border: 1px solid hsl(0, 0%, 82%);
+      border-radius: 4px;
+      padding: 5px 8px;
+      color: hsl(0, 0%, 25%);
+      min-width: 140px;
+    }
+    .bit-table-wrap {
+      overflow-x: auto;
+      margin-bottom: 16px;
+    }
+    .bit-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+    .bit-table th {
+      text-align: left;
+      font-weight: 500;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: hsl(0, 0%, 45%);
+      padding: 6px 8px;
+      border-bottom: 2px solid hsl(0, 0%, 88%);
+      position: sticky;
+      top: 0;
+      background: #fff;
+    }
+    .bit-table th.required::after {
+      content: '*';
+      color: hsl(0, 50%, 50%);
+      margin-left: 2px;
+    }
+    .bit-table td {
+      padding: 4px 8px;
+      border-bottom: 1px solid hsl(0, 0%, 92%);
+      color: hsl(0, 0%, 30%);
+    }
+    .bit-table td input {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      border: 1px solid transparent;
+      border-radius: 3px;
+      padding: 3px 5px;
+      color: hsl(0, 0%, 25%);
+      width: 100%;
+      min-width: 60px;
+      box-sizing: border-box;
+      background: none;
+    }
+    .bit-table td input:hover {
+      border-color: hsl(0, 0%, 82%);
+    }
+    .bit-table td input:focus {
+      outline: none;
+      border-color: hsl(0, 0%, 55%);
+      background: #fff;
+    }
+    .bit-table td input.missing {
+      border-color: hsl(0, 50%, 75%);
+      background: hsla(0, 50%, 95%, 0.5);
+    }
+    .bit-table td select {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      border: 1px solid transparent;
+      border-radius: 3px;
+      padding: 3px 5px;
+      color: hsl(0, 0%, 25%);
+      background: none;
+      cursor: pointer;
+    }
+    .bit-table td select:hover {
+      border-color: hsl(0, 0%, 82%);
+    }
+    .bit-table td select:focus {
+      outline: none;
+      border-color: hsl(0, 0%, 55%);
+    }
+    .bit-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .bit-download-btn {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      padding: 7px 16px;
+      border: none;
+      border-radius: 4px;
+      background: hsl(0, 0%, 20%);
+      color: #fff;
+      cursor: pointer;
+    }
+    .bit-download-btn:hover {
+      background: hsl(0, 0%, 30%);
+    }
+    .bit-download-btn:disabled {
+      opacity: 0.4;
+      cursor: default;
+    }
+    .bit-warning {
+      font-size: 11px;
+      color: hsl(0, 50%, 50%);
+    }
+    .bit-empty {
+      font-size: 13px;
+      color: hsl(0, 0%, 55%);
+      padding: 20px 0;
+    }
+    /* BIT image picker */
+    .bit-image-field {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      flex: 1 1 100%;
+    }
+    .bit-image-field label {
+      flex: 1;
+      min-width: 200px;
+    }
+    .bit-browse-btn {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      padding: 5px 10px;
+      border: 1px solid hsl(0, 0%, 82%);
+      border-radius: 4px;
+      background: none;
+      color: hsl(0, 0%, 35%);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .bit-browse-btn:hover {
+      border-color: hsl(0, 0%, 55%);
+      color: hsl(0, 0%, 15%);
+    }
+    .bit-image-preview {
+      width: 32px;
+      height: 32px;
+      border-radius: 4px;
+      object-fit: cover;
+      border: 1px solid hsl(0, 0%, 85%);
+      display: none;
+    }
+    .bit-image-preview.has-src {
+      display: block;
+    }
+    .bit-image-picker-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      background: rgba(0,0,0,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .bit-image-picker {
+      background: #fff;
+      border-radius: 8px;
+      padding: 24px;
+      max-width: 560px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    .bit-image-picker h3 {
+      font-size: 13px;
+      font-weight: 600;
+      color: hsl(0, 0%, 20%);
+      margin-bottom: 16px;
+    }
+    .bit-image-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 10px;
+    }
+    .bit-image-option {
+      cursor: pointer;
+      border: 2px solid transparent;
+      border-radius: 6px;
+      overflow: hidden;
+      transition: border-color 0.15s;
+    }
+    .bit-image-option:hover {
+      border-color: hsl(50, 70%, 40%);
+    }
+    .bit-image-option img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      display: block;
+    }
+    .bit-image-option-name {
+      font-size: 9px;
+      color: hsl(0, 0%, 50%);
+      padding: 3px 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .bit-apply-image-btn {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      padding: 4px 10px;
+      border: 1px solid hsl(0, 0%, 82%);
+      border-radius: 4px;
+      background: none;
+      color: hsl(0, 0%, 35%);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .bit-apply-image-btn:hover {
+      border-color: hsl(0, 0%, 55%);
+      color: hsl(0, 0%, 15%);
+    }
+
+    .gig-select-cb {
+      cursor: pointer;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .sidebar-select-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      font-size: 11px;
+      color: hsl(0, 0%, 45%);
+    }
+    .sidebar-select-actions label {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .sidebar-select-actions .selected-count {
+      margin-left: auto;
+    }
+
     @media (max-width: 768px) {
       body {
         flex-direction: column;
@@ -674,6 +931,7 @@
           <tr><td><input type="checkbox" class="meta-tag-cb" checked data-tag="On-Sale Time:"></td><td>On-Sale Time</td><td>On-Sale Time: 10:00</td><td>24-hour format</td></tr>
           <tr><td><input type="checkbox" class="meta-tag-cb" checked data-tag="Scheduled Date:"></td><td>Scheduled Date</td><td>Scheduled Date: 2026-07-15</td><td>BIT publication date</td></tr>
           <tr><td><input type="checkbox" class="meta-tag-cb" checked data-tag="Scheduled Time:"></td><td>Scheduled Time</td><td>Scheduled Time: 12:00</td><td>BIT publication time</td></tr>
+          <tr><td><input type="checkbox" class="meta-tag-cb" checked data-tag="Description:"></td><td>Description</td><td>Description: A fun evening of great music.</td><td>Public event description for BIT export</td></tr>
           <tr><td><input type="checkbox" class="meta-tag-cb" checked data-tag="Pay:"></td><td>Pay</td><td>Pay: $500</td><td>Stripped from output — never public</td></tr>
         </tbody>
       </table>
@@ -710,10 +968,43 @@
         })();
       </script>
     </div>
+    <div class="admin-section" style="margin-top: 40px;">
+      <h2>Bandsintown Export</h2>
+      <p style="font-size: 13px; color: hsl(0, 0%, 45%); margin-bottom: 16px;">
+        Select events in the sidebar, fill in any missing fields, then download a CSV for
+        <a href="https://artists.bandsintown.com/artists/15588106/events/draft" target="_blank" style="color: hsl(0,0%,35%);">Bandsintown</a> bulk upload.
+      </p>
+      <div class="bit-defaults">
+        <label>Artist Name
+          <input type="text" id="bit-artist" value="Tumbling Daisies" placeholder="Tumbling Daisies">
+        </label>
+        <label>Country
+          <input type="text" id="bit-country" value="United States" placeholder="United States">
+        </label>
+        <label>Timezone
+          <input type="text" id="bit-timezone" value="America/Chicago" placeholder="America/Chicago">
+        </label>
+        <div class="bit-image-field">
+          <label>Default Event Image
+            <input type="text" id="bit-default-image" placeholder="https://… (public image URL)">
+          </label>
+          <img class="bit-image-preview" id="bit-image-preview" alt="">
+          <button class="bit-browse-btn" id="bit-browse-images">Browse</button>
+          <button class="bit-apply-image-btn" id="bit-apply-image" title="Apply to all selected events">Apply to selected</button>
+        </div>
+      </div>
+      <div id="bit-export-content">
+        <div class="bit-empty">Select events from the sidebar to build an export.</div>
+      </div>
+    </div>
   </div>
 
   <aside class="admin-sidebar">
     <div class="sidebar-title">Upcoming Gigs</div>
+    <div class="sidebar-select-actions" id="sidebar-select-actions" style="display:none;">
+      <label><input type="checkbox" id="select-all-gigs"> Select all</label>
+      <span class="selected-count" id="selected-count"></span>
+    </div>
     <div id="gigs-list">
       <span class="gigs-empty">Loading...</span>
     </div>
@@ -773,6 +1064,10 @@
         .catch(function () {
           document.getElementById('subscribers-list').innerHTML = '<span class="gigs-empty">Could not load subscribers.</span>';
         });
+
+      // --- All upcoming gigs (populated after fetch) ---
+      var allUpcomingGigs = [];
+      var selectedGigIds = [];
 
       // --- Hidden gigs ---
       var hiddenGigIds = [];
@@ -847,13 +1142,17 @@
           }
 
           container.innerHTML = '';
+          document.getElementById('sidebar-select-actions').style.display = 'flex';
           upcoming.forEach(function (gig) {
+            allUpcomingGigs.push(gig);
             var isHidden = hiddenGigIds.indexOf(gig.id) !== -1;
             var card = document.createElement('div');
             card.className = 'gig-card' + (isHidden ? ' is-hidden' : '');
+            card.setAttribute('data-gig-id', gig.id);
 
-            // Collapsed header: date, status, title
+            // Collapsed header: date, status, title + selection checkbox
             var header = '<div class="gig-header">';
+            header += '<input type="checkbox" class="gig-select-cb" data-gig-id="' + gig.id + '">';
             header += '<span class="gig-toggle">&#9654;</span>';
             header += '<div class="gig-header-info">';
             header += '<div class="gig-date">' + fmtDate(gig.date) + '</div>';
@@ -881,7 +1180,8 @@
             details += '</div>';
 
             card.innerHTML = header + details;
-            card.querySelector('.gig-header').addEventListener('click', function () {
+            card.querySelector('.gig-header').addEventListener('click', function (e) {
+              if (e.target.classList.contains('gig-select-cb')) return;
               card.classList.toggle('open');
             });
             var visBtn = card.querySelector('.gig-visibility-btn');
@@ -890,6 +1190,372 @@
               toggleGigVisibility(gig.id, card, visBtn);
             });
             container.appendChild(card);
+          });
+
+          // --- Gig selection for BIT export ---
+          var selectAllCb = document.getElementById('select-all-gigs');
+          var countEl = document.getElementById('selected-count');
+
+          function updateSelectedCount() {
+            var cbs = document.querySelectorAll('.gig-select-cb:checked');
+            selectedGigIds = Array.from(cbs).map(function (cb) { return cb.getAttribute('data-gig-id'); });
+            countEl.textContent = selectedGigIds.length ? selectedGigIds.length + ' selected' : '';
+            var allCbs = document.querySelectorAll('.gig-select-cb');
+            selectAllCb.checked = allCbs.length > 0 && selectedGigIds.length === allCbs.length;
+            selectAllCb.indeterminate = selectedGigIds.length > 0 && selectedGigIds.length < allCbs.length;
+            renderBitExport();
+          }
+
+          container.addEventListener('change', function (e) {
+            if (e.target.classList.contains('gig-select-cb')) {
+              e.stopPropagation();
+              updateSelectedCount();
+            }
+          });
+
+          selectAllCb.addEventListener('change', function () {
+            var cbs = document.querySelectorAll('.gig-select-cb');
+            cbs.forEach(function (cb) { cb.checked = selectAllCb.checked; });
+            updateSelectedCount();
+          });
+
+          // --- BIT export rendering ---
+          // Columns match the official Bandsintown bulk upload template exactly
+          var BIT_COLUMNS = [
+            { key: 'artistName', label: 'Artist Name', csvHeader: 'Artist Name', required: false, fromDefault: 'bit-artist' },
+            { key: 'venue', label: 'Venue', csvHeader: 'Venue*', required: true },
+            { key: 'country', label: 'Country', csvHeader: 'Country*', required: true, fromDefault: 'bit-country' },
+            { key: 'address', label: 'Address', csvHeader: 'Address', required: false },
+            { key: 'city', label: 'City', csvHeader: 'City*', required: true },
+            { key: 'region', label: 'State/Region', csvHeader: 'Region*', required: true },
+            { key: 'postalCode', label: 'Postal Code', csvHeader: 'Postal Code', required: false },
+            { key: 'timezone', label: 'Timezone', csvHeader: 'Timezone*', required: true, fromDefault: 'bit-timezone' },
+            { key: 'startDate', label: 'Start Date', csvHeader: 'Start Date* (yyyy-mm-dd)', required: true },
+            { key: 'startTime', label: 'Start Time', csvHeader: 'Start Time* (HH:MM)', required: true },
+            { key: 'endDate', label: 'End Date', csvHeader: 'End Date', required: false },
+            { key: 'endTime', label: 'End Time', csvHeader: 'End Time', required: false },
+            { key: 'streamingLink', label: 'Streaming Link', csvHeader: 'Streaming Link', required: false },
+            { key: 'ticketLink', label: 'Ticket Link', csvHeader: 'Ticket Link', required: false },
+            { key: 'ticketType', label: 'Ticket Type', csvHeader: 'Ticket Type', required: false, options: ['', 'Tickets', 'Presale', 'VIP', 'Free', 'Sold Out'] },
+            { key: 'ticketLink2', label: 'Ticket Link 2', csvHeader: 'Ticket Link 2', required: false },
+            { key: 'ticketType2', label: 'Ticket Type 2', csvHeader: 'Ticket Type 2', required: false, options: ['', 'Presale', 'VIP', 'Free', 'Sold Out'] },
+            { key: 'onSaleDate', label: 'On-Sale Date', csvHeader: 'On-Sale Date', required: false },
+            { key: 'onSaleTime', label: 'On-Sale Time', csvHeader: 'On-Sale Time', required: false },
+            { key: 'lineup', label: 'Lineup', csvHeader: 'Lineup', required: false },
+            { key: 'eventName', label: 'Event Name', csvHeader: 'Event Name', required: false },
+            { key: 'eventDisplayFormat', label: 'Display Format', csvHeader: 'Event Display Format', required: false },
+            { key: 'description', label: 'Description', csvHeader: 'Description', required: false },
+            { key: 'scheduleDate', label: 'Schedule Date', csvHeader: 'Schedule Date', required: false },
+            { key: 'scheduleTime', label: 'Schedule Time', csvHeader: 'Schedule Time', required: false },
+            { key: 'doNotAnnounce', label: 'Do Not Announce', csvHeader: 'Do Not Announce', required: false, options: ['', 'Y'] },
+            { key: 'setlist', label: 'Setlist', csvHeader: 'Setlist', required: false },
+            { key: 'eventImage', label: 'Event Image', csvHeader: 'Event Image', required: false }
+          ];
+
+          // Parse showtime string like "7pm-9pm" or "5:30pm-8:00pm" to 24h HH:MM
+          function parseShowtime(str) {
+            if (!str) return { start: '', end: '' };
+            function to24(t) {
+              var m = t.match(/(\d{1,2})(?::(\d{2}))?\s*(am|pm)?/i);
+              if (!m) return '';
+              var h = parseInt(m[1], 10);
+              var min = m[2] || '00';
+              var ampm = (m[3] || '').toLowerCase();
+              if (ampm === 'pm' && h < 12) h += 12;
+              if (ampm === 'am' && h === 12) h = 0;
+              return String(h).padStart(2, '0') + ':' + min;
+            }
+            var parts = str.split(/[-–]/);
+            return { start: to24(parts[0] || ''), end: parts[1] ? to24(parts[1]) : '' };
+          }
+
+          // Build row data from gig + defaults
+          function gigToRow(gig) {
+            var times = parseShowtime(gig.showtime);
+            var startTime24 = '';
+            if (gig.startTime) {
+              var d = new Date(gig.startTime);
+              startTime24 = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+            } else if (times.start) {
+              startTime24 = times.start;
+            }
+            var endTime24 = '';
+            if (gig.endTime) {
+              var d = new Date(gig.endTime);
+              endTime24 = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+            } else if (times.end) {
+              endTime24 = times.end;
+            }
+            return {
+              artistName: '',
+              venue: gig.venue || '',
+              country: '',
+              address: '',
+              city: gig.city || '',
+              region: gig.region || '',
+              postalCode: '',
+              timezone: '',
+              startDate: gig.date || '',
+              startTime: startTime24,
+              endDate: '',
+              endTime: endTime24,
+              streamingLink: gig.streamingLink || '',
+              ticketLink: gig.ticketLink || '',
+              ticketType: gig.ticketType || '',
+              ticketLink2: gig.ticketLink2 || '',
+              ticketType2: gig.ticketType2 || '',
+              onSaleDate: gig.onSaleDate || '',
+              onSaleTime: gig.onSaleTime || '',
+              lineup: gig.lineup || '',
+              eventName: gig.eventName || '',
+              eventDisplayFormat: '',
+              description: gig.bitDescription || '',
+              scheduleDate: gig.scheduledDate || '',
+              scheduleTime: gig.scheduledTime || '',
+              doNotAnnounce: '',
+              setlist: '',
+              eventImage: gig.eventImage || ''
+            };
+          }
+
+          // Store edits per gig id
+          var bitEdits = {};
+
+          function renderBitExport() {
+            var exportEl = document.getElementById('bit-export-content');
+            var selected = allUpcomingGigs.filter(function (g) { return selectedGigIds.indexOf(g.id) !== -1; });
+
+            if (selected.length === 0) {
+              exportEl.innerHTML = '<div class="bit-empty">Select events from the sidebar to build an export.</div>';
+              return;
+            }
+
+            var countryDefault = document.getElementById('bit-country').value;
+            var tzDefault = document.getElementById('bit-timezone').value;
+
+            // Build table
+            var html = '<div class="bit-table-wrap"><table class="bit-table"><thead><tr>';
+            BIT_COLUMNS.forEach(function (col) {
+              html += '<th' + (col.required ? ' class="required"' : '') + '>' + col.label + '</th>';
+            });
+            html += '</tr></thead><tbody>';
+
+            var hasMissing = false;
+
+            selected.forEach(function (gig) {
+              var row = gigToRow(gig);
+              // Apply stored edits
+              var edits = bitEdits[gig.id] || {};
+              Object.keys(edits).forEach(function (k) { row[k] = edits[k]; });
+              // Apply defaults for artist/country/timezone if not manually edited
+              var artistDefault = document.getElementById('bit-artist').value;
+              if (!row.artistName && !edits.artistName) row.artistName = artistDefault;
+              if (!row.country && !edits.country) row.country = countryDefault;
+              if (!row.timezone && !edits.timezone) row.timezone = tzDefault;
+
+              html += '<tr>';
+              BIT_COLUMNS.forEach(function (col) {
+                var val = row[col.key] || '';
+                var isMissing = col.required && !val;
+                if (isMissing) hasMissing = true;
+
+                if (col.options) {
+                  html += '<td><select data-gig="' + gig.id + '" data-col="' + col.key + '">';
+                  col.options.forEach(function (opt) {
+                    html += '<option' + (opt === val ? ' selected' : '') + '>' + opt + '</option>';
+                  });
+                  html += '</select></td>';
+                } else {
+                  html += '<td><input type="text" value="' + val.replace(/"/g, '&quot;') + '"'
+                    + (isMissing ? ' class="missing" placeholder="required"' : '')
+                    + ' data-gig="' + gig.id + '" data-col="' + col.key + '"></td>';
+                }
+              });
+              html += '</tr>';
+            });
+
+            html += '</tbody></table></div>';
+
+            html += '<div class="bit-actions">';
+            html += '<button class="bit-download-btn" id="bit-download"' + (hasMissing ? ' disabled' : '') + '>Download CSV</button>';
+            if (hasMissing) {
+              html += '<span class="bit-warning">Fill in required fields marked in red.</span>';
+            }
+            html += '</div>';
+
+            exportEl.innerHTML = html;
+
+            // Listen for edits
+            exportEl.addEventListener('input', function (e) {
+              var el = e.target;
+              if (!el.getAttribute('data-gig')) return;
+              var gid = el.getAttribute('data-gig');
+              var col = el.getAttribute('data-col');
+              if (!bitEdits[gid]) bitEdits[gid] = {};
+              bitEdits[gid][col] = el.value;
+              // Re-check missing state
+              var colDef = BIT_COLUMNS.find(function (c) { return c.key === col; });
+              if (colDef && colDef.required) {
+                if (el.value) {
+                  el.classList.remove('missing');
+                  el.removeAttribute('placeholder');
+                } else {
+                  el.classList.add('missing');
+                  el.setAttribute('placeholder', 'required');
+                }
+                // Update download button state
+                var anyMissing = exportEl.querySelectorAll('input.missing').length > 0;
+                var dlBtn = document.getElementById('bit-download');
+                if (dlBtn) {
+                  dlBtn.disabled = anyMissing;
+                  var warn = exportEl.querySelector('.bit-warning');
+                  if (warn) warn.style.display = anyMissing ? '' : 'none';
+                }
+              }
+            });
+
+            exportEl.addEventListener('change', function (e) {
+              var el = e.target;
+              if (el.tagName === 'SELECT' && el.getAttribute('data-gig')) {
+                var gid = el.getAttribute('data-gig');
+                var col = el.getAttribute('data-col');
+                if (!bitEdits[gid]) bitEdits[gid] = {};
+                bitEdits[gid][col] = el.value;
+              }
+            });
+
+            // Download handler
+            var dlBtn = document.getElementById('bit-download');
+            if (dlBtn) {
+              dlBtn.addEventListener('click', function () {
+                downloadBitCsv(selected);
+              });
+            }
+          }
+
+          function downloadBitCsv(gigs) {
+            var artistDefault = document.getElementById('bit-artist').value;
+            var countryDefault = document.getElementById('bit-country').value;
+            var tzDefault = document.getElementById('bit-timezone').value;
+
+            var headers = BIT_COLUMNS.map(function (c) { return c.csvHeader; });
+            var rows = [headers.join(',')];
+
+            gigs.forEach(function (gig) {
+              var row = gigToRow(gig);
+              var edits = bitEdits[gig.id] || {};
+              Object.keys(edits).forEach(function (k) { row[k] = edits[k]; });
+              if (!row.artistName && !edits.artistName) row.artistName = artistDefault;
+              if (!row.country && !edits.country) row.country = countryDefault;
+              if (!row.timezone && !edits.timezone) row.timezone = tzDefault;
+
+              var cells = BIT_COLUMNS.map(function (col) {
+                var val = (row[col.key] || '').replace(/"/g, '""');
+                return '"' + val + '"';
+              });
+              rows.push(cells.join(','));
+            });
+
+            var csv = rows.join('\r\n');
+            var blob = new Blob([csv], { type: 'text/csv' });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = 'bandsintown-upload.csv';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+          }
+
+          // Re-render when defaults change
+          document.getElementById('bit-artist').addEventListener('input', function () { renderBitExport(); });
+          document.getElementById('bit-country').addEventListener('input', function () { renderBitExport(); });
+          document.getElementById('bit-timezone').addEventListener('input', function () { renderBitExport(); });
+
+          // --- Default image picker ---
+          var BIT_RAW_BASE = 'https://raw.githubusercontent.com/nobleburgundy/tumbling-daisies/master/';
+          var BIT_REPO_IMAGES = [
+            { file: 'assets/band.jpg', name: 'Band' },
+            { file: 'assets/press-07-band.jpg', name: 'Band (press)' },
+            { file: 'assets/press-11-band2.jpg', name: 'Band 2' },
+            { file: 'assets/press-12-band3.jpg', name: 'Band 3' },
+            { file: 'assets/press-01-backyard.jpg', name: 'Backyard' },
+            { file: 'assets/press-04-backyard2.jpeg', name: 'Backyard 2' },
+            { file: 'assets/press-02-collage.jpg', name: 'Collage' },
+            { file: 'assets/press-03-performance.jpg', name: 'Performance' },
+            { file: 'assets/logo-circle-sm.png', name: 'Logo' },
+            { file: 'assets/jay.jpg', name: 'Jay' },
+            { file: 'assets/press-09-jay.jpg', name: 'Jay (press)' },
+            { file: 'assets/mark.jpg', name: 'Mark' },
+            { file: 'assets/press-10-mark.jpg', name: 'Mark (press)' },
+            { file: 'assets/chris.jpg', name: 'Chris' },
+            { file: 'assets/press-06-chris.jpeg', name: 'Chris (press)' },
+            { file: 'assets/james.jpg', name: 'James' },
+            { file: 'assets/press-08-james2.jpg', name: 'James (press)' }
+          ];
+
+          var defaultImageInput = document.getElementById('bit-default-image');
+          var imagePreview = document.getElementById('bit-image-preview');
+
+          function updateImagePreview() {
+            var val = defaultImageInput.value.trim();
+            if (val) {
+              imagePreview.src = val;
+              imagePreview.classList.add('has-src');
+            } else {
+              imagePreview.classList.remove('has-src');
+              imagePreview.removeAttribute('src');
+            }
+          }
+
+          defaultImageInput.addEventListener('input', updateImagePreview);
+
+          document.getElementById('bit-browse-images').addEventListener('click', function () {
+            var overlay = document.createElement('div');
+            overlay.className = 'bit-image-picker-overlay';
+            var picker = document.createElement('div');
+            picker.className = 'bit-image-picker';
+            picker.innerHTML = '<h3>Select an image</h3><p style="font-size:11px;color:hsl(0,0%,50%);margin-bottom:12px;">Images will use the public GitHub URL. BIT recommends square images, max 2048x2048, under 6 MB.</p><div class="bit-image-grid"></div>';
+            var grid = picker.querySelector('.bit-image-grid');
+
+            BIT_REPO_IMAGES.forEach(function (img) {
+              var thumbFile = img.file.replace('assets/', 'assets/press-thumbs/');
+              // Use thumb if it's a press image, otherwise use original
+              var thumbSrc = img.file.indexOf('press-') !== -1 ? thumbFile.replace('.jpeg', '.jpg') : img.file;
+              var publicUrl = BIT_RAW_BASE + img.file;
+              var opt = document.createElement('div');
+              opt.className = 'bit-image-option';
+              opt.innerHTML = '<img src="' + thumbSrc + '" alt="' + img.name + '" onerror="this.src=\'' + img.file + '\'">'
+                + '<div class="bit-image-option-name">' + img.name + '</div>';
+              opt.addEventListener('click', function () {
+                defaultImageInput.value = publicUrl;
+                updateImagePreview();
+                document.body.removeChild(overlay);
+              });
+              grid.appendChild(opt);
+            });
+
+            overlay.appendChild(picker);
+            overlay.addEventListener('click', function (e) {
+              if (e.target === overlay) document.body.removeChild(overlay);
+            });
+            document.body.appendChild(overlay);
+          });
+
+          // Apply default image to all selected events
+          document.getElementById('bit-apply-image').addEventListener('click', function () {
+            var url = defaultImageInput.value.trim();
+            if (!url || selectedGigIds.length === 0) return;
+            selectedGigIds.forEach(function (id) {
+              if (!bitEdits[id]) bitEdits[id] = {};
+              bitEdits[id].eventImage = url;
+            });
+            renderBitExport();
+            var btn = document.getElementById('bit-apply-image');
+            var orig = btn.textContent;
+            btn.textContent = 'Applied!';
+            setTimeout(function () { btn.textContent = orig; }, 1500);
           });
         })
         .catch(function () {
