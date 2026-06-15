@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-06-15T15:51:28.745Z",
+  "fetchedAt": "2026-06-15T16:13:34.372Z",
   "gigs": [
     {
       "id": "_8opkce9m6p23cb9p8l2k4b9k6134aba28crj0b9n75134h1o6krk8da28k",
@@ -108,9 +108,9 @@
       "onSaleDate": null,
       "onSaleTime": null,
       "lineup": null,
-      "eventName": null,
+      "eventName": "Tumbling Daisies at 331 Club",
       "eventImage": null,
-      "cover": null,
+      "cover": "Free",
       "age": null,
       "streamingLink": null,
       "scheduledDate": null,

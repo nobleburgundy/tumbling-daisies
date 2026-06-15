@@ -245,6 +245,105 @@
       return h + (m ? ':' + (m < 10 ? '0' : '') + m : '') + ' ' + ampm;
     }
 
+    // Parse human showtime like "7pm-9pm" or "5:30pm-8:00pm"
+    function parseShowtime(showtime) {
+      if (!showtime) return null;
+      var re = /(\d{1,2})(?::(\d{2}))?\s*(am|pm)?\s*(?:[-–—]|to)\s*(\d{1,2})(?::(\d{2}))?\s*(am|pm)?/i;
+      var m = showtime.match(re);
+      if (!m) return null;
+      var sh = parseInt(m[1], 10), sm = parseInt(m[2] || '0', 10);
+      var eh = parseInt(m[4], 10), em = parseInt(m[5] || '0', 10);
+      var sap = (m[3] || m[6] || '').toLowerCase();
+      var eap = (m[6] || m[3] || '').toLowerCase();
+      if (sap === 'pm' && sh < 12) sh += 12;
+      if (sap === 'am' && sh === 12) sh = 0;
+      if (eap === 'pm' && eh < 12) eh += 12;
+      if (eap === 'am' && eh === 12) eh = 0;
+      return { startHour: sh, startMin: sm, endHour: eh, endMin: em };
+    }
+
+    function pad2(n) { return n < 10 ? '0' + n : '' + n; }
+
+    function getCalendarDates(gig) {
+      var times = parseShowtime(gig.showtime);
+      var isAllDay = !times && !gig.startTime;
+      if (isAllDay) {
+        var ds = gig.date.replace(/-/g, '');
+        var end = new Date(gig.date + 'T12:00:00');
+        end.setDate(end.getDate() + 1);
+        var de = end.getFullYear() + pad2(end.getMonth() + 1) + pad2(end.getDate());
+        return { allDay: true, start: ds, end: de };
+      }
+      if (times) {
+        var start = gig.date.replace(/-/g, '') + 'T' + pad2(times.startHour) + pad2(times.startMin) + '00';
+        var endStr = gig.date.replace(/-/g, '') + 'T' + pad2(times.endHour) + pad2(times.endMin) + '00';
+        return { allDay: false, start: start, end: endStr };
+      }
+      function isoToLocal(iso) {
+        var d = new Date(iso);
+        return d.getFullYear() + pad2(d.getMonth() + 1) + pad2(d.getDate()) +
+          'T' + pad2(d.getHours()) + pad2(d.getMinutes()) + '00';
+      }
+      return { allDay: false, start: isoToLocal(gig.startTime), end: gig.endTime ? isoToLocal(gig.endTime) : isoToLocal(gig.startTime) };
+    }
+
+    function buildGoogleCalUrl(gig) {
+      var title = gig.eventName || gig.title || '';
+      var dates = getCalendarDates(gig);
+      var params = [
+        'action=TEMPLATE',
+        'text=' + encodeURIComponent(title),
+        'dates=' + dates.start + '/' + dates.end,
+      ];
+      if (gig.location) params.push('location=' + encodeURIComponent(gig.location));
+      var desc = [];
+      if (gig.showtime) desc.push('Showtime: ' + gig.showtime);
+      if (gig.ticketLink) desc.push('Tickets: ' + gig.ticketLink);
+      if (desc.length) params.push('details=' + encodeURIComponent(desc.join('\n')));
+      return 'https://www.google.com/calendar/render?' + params.join('&');
+    }
+
+    function buildIcs(gig) {
+      var title = gig.eventName || gig.title || '';
+      var dates = getCalendarDates(gig);
+      var loc = gig.location || '';
+      var desc = [];
+      if (gig.showtime) desc.push('Showtime: ' + gig.showtime);
+      if (gig.ticketLink) desc.push('Tickets: ' + gig.ticketLink);
+      var lines = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//Tumbling Daisies//Shows//EN',
+        'BEGIN:VEVENT',
+      ];
+      if (dates.allDay) {
+        lines.push('DTSTART;VALUE=DATE:' + dates.start);
+        lines.push('DTEND;VALUE=DATE:' + dates.end);
+      } else {
+        lines.push('DTSTART:' + dates.start);
+        lines.push('DTEND:' + dates.end);
+      }
+      lines.push('SUMMARY:' + title.replace(/[,;\\]/g, function (c) { return '\\' + c; }));
+      if (loc) lines.push('LOCATION:' + loc.replace(/[,;\\]/g, function (c) { return '\\' + c; }));
+      if (desc.length) lines.push('DESCRIPTION:' + desc.join('\\n').replace(/[,;]/g, function (c) { return '\\' + c; }));
+      lines.push('BEGIN:VALARM', 'TRIGGER:-PT2H', 'ACTION:DISPLAY', 'DESCRIPTION:Reminder', 'END:VALARM');
+      lines.push('END:VEVENT', 'END:VCALENDAR');
+      return lines.join('\r\n');
+    }
+
+    function downloadIcs(gig) {
+      var ics = buildIcs(gig);
+      var blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = (gig.eventName || gig.title || 'event').replace(/[^a-z0-9]/gi, '-').toLowerCase() + '.ics';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
     Promise.all([
       fetch('gigs.json').then(function (res) { return res.json(); }),
       fetch('hidden-gigs.json').then(function (res) { return res.json(); }).catch(function () { return []; })
@@ -290,8 +389,38 @@
             '<div class="show-info">' +
               '<span class="show-title">' + title + '</span>' +
               details +
+            '</div>' +
+            '<div class="show-add-cal">' +
+              '<button class="add-cal-btn" aria-label="Add to calendar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="12" y1="14" x2="12" y2="18"/><line x1="10" y1="16" x2="14" y2="16"/></svg></button>' +
+              '<div class="add-cal-dropdown">' +
+                '<a class="add-cal-option" href="' + buildGoogleCalUrl(gig) + '" target="_blank" rel="noopener">Google Calendar</a>' +
+                '<button class="add-cal-option add-cal-ics">Apple / Outlook (.ics)</button>' +
+              '</div>' +
             '</div>';
+
+          // Wire up ICS download
+          var icsBtn = div.querySelector('.add-cal-ics');
+          (function (g) {
+            icsBtn.addEventListener('click', function () { downloadIcs(g); });
+          })(gig);
+
+          // Toggle dropdown
+          var calBtn = div.querySelector('.add-cal-btn');
+          var dropdown = div.querySelector('.add-cal-dropdown');
+          calBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            var wasOpen = dropdown.classList.contains('open');
+            // Close any other open dropdowns
+            container.querySelectorAll('.add-cal-dropdown.open').forEach(function (d) { d.classList.remove('open'); });
+            if (!wasOpen) dropdown.classList.add('open');
+          });
+
           container.appendChild(div);
+        });
+
+        // Close dropdowns on outside click
+        document.addEventListener('click', function () {
+          container.querySelectorAll('.add-cal-dropdown.open').forEach(function (d) { d.classList.remove('open'); });
         });
       })
       .catch(function () {
