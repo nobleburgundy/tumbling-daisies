@@ -111,6 +111,9 @@
       border-left: 1px solid hsl(0, 0%, 88%);
       padding: 60px 24px;
       overflow-y: auto;
+      position: sticky;
+      top: 0;
+      height: 100vh;
     }
     .sidebar-title {
       font-size: 12px;
@@ -219,7 +222,7 @@
       font-family: 'IBM Plex Mono', monospace;
       color: hsl(145, 50%, 35%);
       text-decoration: none;
-      padding: 4px 16px 0;
+      padding: 4px 12px 0;
       letter-spacing: 0.03em;
     }
     .gig-bit-link:hover {
@@ -554,6 +557,16 @@
     .bit-table-wrap {
       overflow-x: auto;
       margin-bottom: 16px;
+      position: relative;
+      background:
+        linear-gradient(to right, #fff 30%, rgba(255,255,255,0)),
+        linear-gradient(to left, #fff 30%, rgba(255,255,255,0)),
+        linear-gradient(to right, rgba(0,0,0,0.08), rgba(0,0,0,0)),
+        linear-gradient(to left, rgba(0,0,0,0.08), rgba(0,0,0,0));
+      background-position: left center, right center, left center, right center;
+      background-repeat: no-repeat;
+      background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
+      background-attachment: local, local, scroll, scroll;
     }
     .bit-table {
       width: 100%;
@@ -629,6 +642,12 @@
       display: flex;
       align-items: center;
       gap: 12px;
+      position: sticky;
+      bottom: 0;
+      background: #fff;
+      padding: 12px 0;
+      border-top: 1px solid hsl(0, 0%, 90%);
+      margin-top: 4px;
     }
     .bit-download-btn {
       font-family: 'IBM Plex Mono', monospace;
@@ -799,9 +818,9 @@
     .sidebar-select-actions {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       margin-bottom: 12px;
-      font-size: 11px;
+      font-size: 10px;
       color: hsl(0, 0%, 45%);
     }
     .sidebar-select-actions label {
@@ -810,19 +829,6 @@
       align-items: center;
       gap: 4px;
     }
-    .show-hidden-toggle {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 10px;
-      color: hsl(0, 0%, 50%);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      margin-bottom: 12px;
-    }
-    .show-hidden-toggle input {
-      cursor: pointer;
-    }
     .gig-card.is-hidden.hide-hidden {
       display: none;
     }
@@ -830,16 +836,6 @@
       margin-left: auto;
     }
 
-    @media (max-width: 768px) {
-      body {
-        flex-direction: column;
-      }
-      .admin-sidebar {
-        width: 100%;
-        border-left: none;
-        border-top: 1px solid hsl(0, 0%, 88%);
-      }
-    }
   </style>
 </head>
 <body>
@@ -1086,11 +1082,9 @@
       <button class="sidebar-filter-btn" data-filter="published" data-group="bit">Published on BIT</button>
       <button class="sidebar-filter-btn" data-filter="not-on-bit" data-group="bit">Not on BIT</button>
     </div>
-    <label class="show-hidden-toggle" id="show-hidden-toggle" style="display:none;">
-      <input type="checkbox" id="show-hidden-cb"> Show hidden events
-    </label>
     <div class="sidebar-select-actions" id="sidebar-select-actions" style="display:none;">
       <label><input type="checkbox" id="select-all-gigs"> Select all</label>
+      <label><input type="checkbox" id="show-hidden-cb"> Show hidden</label>
       <span class="selected-count" id="selected-count"></span>
     </div>
     <div id="gigs-list">
@@ -1235,17 +1229,18 @@
           container.innerHTML = '';
           document.getElementById('sidebar-select-actions').style.display = 'flex';
           document.getElementById('sidebar-filters').style.display = 'flex';
-          document.getElementById('show-hidden-toggle').style.display = 'flex';
 
           document.getElementById('show-hidden-cb').addEventListener('change', function () {
+            var checked = this.checked;
             var cards = document.querySelectorAll('.gig-card.is-hidden');
             cards.forEach(function (card) {
-              if (this.checked) {
+              if (checked) {
                 card.classList.remove('hide-hidden');
               } else {
                 card.classList.add('hide-hidden');
               }
-            }.bind(this));
+            });
+            applyFilter();
           });
           upcoming.forEach(function (gig) {
             allUpcomingGigs.push(gig);
@@ -1303,13 +1298,21 @@
           var selectAllCb = document.getElementById('select-all-gigs');
           var countEl = document.getElementById('selected-count');
 
+          function getVisibleCheckboxes() {
+            return Array.from(document.querySelectorAll('.gig-select-cb')).filter(function (cb) {
+              var card = cb.closest('.gig-card');
+              return card && card.style.display !== 'none';
+            });
+          }
+
           function updateSelectedCount() {
             var cbs = document.querySelectorAll('.gig-select-cb:checked');
             selectedGigIds = Array.from(cbs).map(function (cb) { return cb.getAttribute('data-gig-id'); });
             countEl.textContent = selectedGigIds.length ? selectedGigIds.length + ' selected' : '';
-            var allCbs = document.querySelectorAll('.gig-select-cb');
-            selectAllCb.checked = allCbs.length > 0 && selectedGigIds.length === allCbs.length;
-            selectAllCb.indeterminate = selectedGigIds.length > 0 && selectedGigIds.length < allCbs.length;
+            var visibleCbs = getVisibleCheckboxes();
+            var visibleChecked = visibleCbs.filter(function (cb) { return cb.checked; });
+            selectAllCb.checked = visibleCbs.length > 0 && visibleChecked.length === visibleCbs.length;
+            selectAllCb.indeterminate = visibleChecked.length > 0 && visibleChecked.length < visibleCbs.length;
             renderBitExport();
           }
 
@@ -1321,8 +1324,8 @@
           });
 
           selectAllCb.addEventListener('change', function () {
-            var cbs = document.querySelectorAll('.gig-select-cb');
-            cbs.forEach(function (cb) { cb.checked = selectAllCb.checked; });
+            var visibleCbs = getVisibleCheckboxes();
+            visibleCbs.forEach(function (cb) { cb.checked = selectAllCb.checked; });
             updateSelectedCount();
           });
 
@@ -1491,54 +1494,53 @@
             html += '</div>';
 
             exportEl.innerHTML = html;
+          }
 
-            // Listen for edits
-            exportEl.addEventListener('input', function (e) {
-              var el = e.target;
-              if (!el.getAttribute('data-gig')) return;
+          // Delegated listeners — attached once, outside renderBitExport
+          var exportEl = document.getElementById('bit-export-content');
+
+          exportEl.addEventListener('input', function (e) {
+            var el = e.target;
+            if (!el.getAttribute('data-gig')) return;
+            var gid = el.getAttribute('data-gig');
+            var col = el.getAttribute('data-col');
+            if (!bitEdits[gid]) bitEdits[gid] = {};
+            bitEdits[gid][col] = el.value;
+            var colDef = BIT_COLUMNS.find(function (c) { return c.key === col; });
+            if (colDef && colDef.required) {
+              if (el.value) {
+                el.classList.remove('missing');
+                el.removeAttribute('placeholder');
+              } else {
+                el.classList.add('missing');
+                el.setAttribute('placeholder', 'required');
+              }
+              var anyMissing = exportEl.querySelectorAll('input.missing').length > 0;
+              var dlBtn = document.getElementById('bit-download');
+              if (dlBtn) {
+                dlBtn.disabled = anyMissing;
+                var warn = exportEl.querySelector('.bit-warning');
+                if (warn) warn.style.display = anyMissing ? '' : 'none';
+              }
+            }
+          });
+
+          exportEl.addEventListener('change', function (e) {
+            var el = e.target;
+            if (el.tagName === 'SELECT' && el.getAttribute('data-gig')) {
               var gid = el.getAttribute('data-gig');
               var col = el.getAttribute('data-col');
               if (!bitEdits[gid]) bitEdits[gid] = {};
               bitEdits[gid][col] = el.value;
-              // Re-check missing state
-              var colDef = BIT_COLUMNS.find(function (c) { return c.key === col; });
-              if (colDef && colDef.required) {
-                if (el.value) {
-                  el.classList.remove('missing');
-                  el.removeAttribute('placeholder');
-                } else {
-                  el.classList.add('missing');
-                  el.setAttribute('placeholder', 'required');
-                }
-                // Update download button state
-                var anyMissing = exportEl.querySelectorAll('input.missing').length > 0;
-                var dlBtn = document.getElementById('bit-download');
-                if (dlBtn) {
-                  dlBtn.disabled = anyMissing;
-                  var warn = exportEl.querySelector('.bit-warning');
-                  if (warn) warn.style.display = anyMissing ? '' : 'none';
-                }
-              }
-            });
-
-            exportEl.addEventListener('change', function (e) {
-              var el = e.target;
-              if (el.tagName === 'SELECT' && el.getAttribute('data-gig')) {
-                var gid = el.getAttribute('data-gig');
-                var col = el.getAttribute('data-col');
-                if (!bitEdits[gid]) bitEdits[gid] = {};
-                bitEdits[gid][col] = el.value;
-              }
-            });
-
-            // Download handler
-            var dlBtn = document.getElementById('bit-download');
-            if (dlBtn) {
-              dlBtn.addEventListener('click', function () {
-                downloadBitCsv(selected);
-              });
             }
-          }
+          });
+
+          exportEl.addEventListener('click', function (e) {
+            if (e.target.id === 'bit-download') {
+              var selected = allUpcomingGigs.filter(function (g) { return selectedGigIds.indexOf(g.id) !== -1; });
+              downloadBitCsv(selected);
+            }
+          });
 
           function downloadBitCsv(gigs) {
             var artistDefault = document.getElementById('bit-artist').value;
@@ -1753,16 +1755,39 @@
           });
 
           function applyFilter() {
+            var showHidden = document.getElementById('show-hidden-cb').checked;
             var cards = document.querySelectorAll('.gig-card');
+            var anyVisible = false;
             cards.forEach(function (card) {
               var status = card.getAttribute('data-status');
               var bit = card.getAttribute('data-bit') || '';
+              var isHidden = card.classList.contains('is-hidden');
 
+              var hiddenMatch = !isHidden || showHidden;
               var statusMatch = activeStatusFilter === 'all' || status === activeStatusFilter;
               var bitMatch = !activeBitFilter || bit === activeBitFilter;
 
-              card.style.display = (statusMatch && bitMatch) ? '' : 'none';
+              var visible = hiddenMatch && statusMatch && bitMatch;
+              card.style.display = visible ? '' : 'none';
+              if (visible) anyVisible = true;
             });
+
+            // Show empty state when BIT filter active but no data loaded
+            var emptyMsg = document.getElementById('filter-empty-msg');
+            if (!anyVisible && activeBitFilter && bitPublishedDates === null) {
+              if (!emptyMsg) {
+                emptyMsg = document.createElement('div');
+                emptyMsg.id = 'filter-empty-msg';
+                emptyMsg.style.cssText = 'font-size:11px;color:hsl(0,0%,50%);padding:12px 0;';
+                document.getElementById('gigs-list').appendChild(emptyMsg);
+              }
+              emptyMsg.textContent = 'BIT status data not loaded. Run fetch-gigs with BANDSINTOWN_API_KEY to enable BIT filters.';
+              emptyMsg.style.display = '';
+            } else if (emptyMsg) {
+              emptyMsg.style.display = 'none';
+            }
+
+            updateSelectedCount();
           }
         })
         .catch(function () {
