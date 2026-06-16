@@ -194,6 +194,7 @@ async function fetchBitStatus() {
   const published = (events || []).map(evt => ({
     date: evt.datetime ? evt.datetime.substring(0, 10) : null,
     venue: evt.venue ? evt.venue.name : null,
+    url: evt.url || null,
   })).filter(e => e.date);
 
   const status = { fetchedAt: new Date().toISOString(), published };

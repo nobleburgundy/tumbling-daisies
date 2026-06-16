@@ -124,20 +124,20 @@
       background: #fff;
       border: 1px solid hsl(0, 0%, 85%);
       border-radius: 6px;
-      margin-bottom: 12px;
+      margin-bottom: 8px;
     }
     .gig-header {
-      padding: 12px 16px;
+      padding: 8px 12px;
       cursor: pointer;
       display: flex;
       align-items: baseline;
-      gap: 10px;
+      gap: 8px;
     }
     .gig-header:hover {
       background: hsl(0, 0%, 98%);
     }
     .gig-toggle {
-      font-size: 10px;
+      font-size: 8px;
       color: hsl(0, 0%, 55%);
       flex-shrink: 0;
       transition: transform 0.15s;
@@ -151,24 +151,24 @@
     }
     .gig-details {
       display: none;
-      padding: 0 16px 14px;
+      padding: 0 12px 10px;
     }
     .gig-card.open .gig-details {
       display: block;
     }
     .gig-date {
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 500;
       color: hsl(50, 70%, 40%);
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
     .gig-title {
-      font-size: 15px;
+      font-size: 13px;
       font-weight: 600;
       color: hsl(0, 0%, 15%);
-      margin-bottom: 4px;
+      margin-bottom: 2px;
     }
     .gig-venue {
       font-size: 13px;
@@ -182,13 +182,13 @@
     }
     .gig-status {
       display: inline-block;
-      font-size: 10px;
+      font-size: 9px;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.08em;
-      padding: 2px 8px;
+      padding: 1px 6px;
       border-radius: 3px;
-      margin-bottom: 8px;
+      margin-bottom: 4px;
     }
     .gig-status.confirmed {
       background: hsla(120, 40%, 45%, 0.12);
@@ -200,18 +200,30 @@
     }
     .gig-bit-status {
       display: inline-block;
-      font-size: 9px;
+      font-size: 8px;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.06em;
-      padding: 2px 6px;
+      padding: 1px 5px;
       border-radius: 3px;
-      margin-bottom: 8px;
+      margin-bottom: 4px;
       margin-left: 4px;
     }
     .gig-bit-status.published {
       background: hsla(145, 60%, 40%, 0.15);
       color: hsl(145, 60%, 32%);
+    }
+    .gig-bit-link {
+      display: block;
+      font-size: 10px;
+      font-family: 'IBM Plex Mono', monospace;
+      color: hsl(145, 50%, 35%);
+      text-decoration: none;
+      padding: 4px 16px 0;
+      letter-spacing: 0.03em;
+    }
+    .gig-bit-link:hover {
+      text-decoration: underline;
     }
     .gig-bit-status.not-on-bit {
       background: hsla(0, 50%, 50%, 0.12);
@@ -798,6 +810,22 @@
       align-items: center;
       gap: 4px;
     }
+    .show-hidden-toggle {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: hsl(0, 0%, 50%);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 12px;
+    }
+    .show-hidden-toggle input {
+      cursor: pointer;
+    }
+    .gig-card.is-hidden.hide-hidden {
+      display: none;
+    }
     .sidebar-select-actions .selected-count {
       margin-left: auto;
     }
@@ -1058,6 +1086,9 @@
       <button class="sidebar-filter-btn" data-filter="published" data-group="bit">Published on BIT</button>
       <button class="sidebar-filter-btn" data-filter="not-on-bit" data-group="bit">Not on BIT</button>
     </div>
+    <label class="show-hidden-toggle" id="show-hidden-toggle" style="display:none;">
+      <input type="checkbox" id="show-hidden-cb"> Show hidden events
+    </label>
     <div class="sidebar-select-actions" id="sidebar-select-actions" style="display:none;">
       <label><input type="checkbox" id="select-all-gigs"> Select all</label>
       <span class="selected-count" id="selected-count"></span>
@@ -1156,15 +1187,18 @@
       }
 
       function toggleGigVisibility(gigId, card, btn) {
+        var showHiddenCb = document.getElementById('show-hidden-cb');
         var idx = hiddenGigIds.indexOf(gigId);
         if (idx === -1) {
           hiddenGigIds.push(gigId);
           card.classList.add('is-hidden');
+          if (!showHiddenCb || !showHiddenCb.checked) card.classList.add('hide-hidden');
           btn.classList.add('is-hidden');
           btn.textContent = 'hidden';
         } else {
           hiddenGigIds.splice(idx, 1);
           card.classList.remove('is-hidden');
+          card.classList.remove('hide-hidden');
           btn.classList.remove('is-hidden');
           btn.textContent = 'visible';
         }
@@ -1201,11 +1235,23 @@
           container.innerHTML = '';
           document.getElementById('sidebar-select-actions').style.display = 'flex';
           document.getElementById('sidebar-filters').style.display = 'flex';
+          document.getElementById('show-hidden-toggle').style.display = 'flex';
+
+          document.getElementById('show-hidden-cb').addEventListener('change', function () {
+            var cards = document.querySelectorAll('.gig-card.is-hidden');
+            cards.forEach(function (card) {
+              if (this.checked) {
+                card.classList.remove('hide-hidden');
+              } else {
+                card.classList.add('hide-hidden');
+              }
+            }.bind(this));
+          });
           upcoming.forEach(function (gig) {
             allUpcomingGigs.push(gig);
             var isHidden = hiddenGigIds.indexOf(gig.id) !== -1;
             var card = document.createElement('div');
-            card.className = 'gig-card' + (isHidden ? ' is-hidden' : '');
+            card.className = 'gig-card' + (isHidden ? ' is-hidden hide-hidden' : '');
             card.setAttribute('data-gig-id', gig.id);
             card.setAttribute('data-status', gig.status);
             card.setAttribute('data-date', gig.date);
@@ -1650,10 +1696,22 @@
               var card = badge ? badge.closest('.gig-card') : null;
               if (!badge) return;
 
-              if (bitPublishedDates[gig.date]) {
+              var bitEntry = bitPublishedDates[gig.date];
+              if (bitEntry) {
                 badge.textContent = 'published on bandsintown';
                 badge.className = 'gig-bit-status published';
-                if (card) card.setAttribute('data-bit', 'published');
+                if (card) {
+                  card.setAttribute('data-bit', 'published');
+                  if (bitEntry.url && !card.querySelector('.gig-bit-link')) {
+                    var link = document.createElement('a');
+                    link.className = 'gig-bit-link';
+                    link.href = bitEntry.url;
+                    link.target = '_blank';
+                    link.rel = 'noopener';
+                    link.textContent = 'View on Bandsintown \u2192';
+                    card.insertBefore(link, card.firstChild);
+                  }
+                }
               } else {
                 badge.textContent = 'not on bandsintown';
                 badge.className = 'gig-bit-status not-on-bit';
@@ -1728,7 +1786,7 @@
           var published = data.published || [];
           bitPublishedDates = {};
           published.forEach(function (evt) {
-            if (evt.date) bitPublishedDates[evt.date] = true;
+            if (evt.date) bitPublishedDates[evt.date] = { url: evt.url || null };
           });
           bitStatusInfo = {
             fetchedAt: data.fetchedAt ? new Date(data.fetchedAt).toLocaleString() : '',

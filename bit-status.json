@@ -1,17 +1,20 @@
 {
-  "fetchedAt": "2026-06-16T14:52:18.386Z",
+  "fetchedAt": "2026-06-16T15:15:53.851Z",
   "published": [
     {
       "date": "2026-07-17",
-      "venue": "Tumbling Daisies Trio at Animales BBQ"
+      "venue": "Tumbling Daisies Trio at Animales BBQ",
+      "url": "https://www.bandsintown.com/e/108537458?app_id=6abc42599f1b21c21c0e9bac8a98c527&came_from=267&utm_medium=api&utm_source=public_api&utm_campaign=event"
     },
     {
       "date": "2026-08-13",
-      "venue": "Tumbling Daisies at 331 Club"
+      "venue": "Tumbling Daisies at 331 Club",
+      "url": "https://www.bandsintown.com/e/108537457?app_id=6abc42599f1b21c21c0e9bac8a98c527&came_from=267&utm_medium=api&utm_source=public_api&utm_campaign=event"
     },
     {
       "date": "2026-08-27",
-      "venue": "Alpha and Omega Pizza Farm and Event Venue"
+      "venue": "Alpha and Omega Pizza Farm and Event Venue",
+      "url": "https://www.bandsintown.com/e/108537456?app_id=6abc42599f1b21c21c0e9bac8a98c527&came_from=267&utm_medium=api&utm_source=public_api&utm_campaign=event"
     }
   ]
 }
