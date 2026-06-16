@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script>
+    // Redirect defined path segments to hash routes on the home page.
+    // GitHub Pages serves this 404 page for any unknown path, so
+    // /music becomes /#music, /shows becomes /#shows, etc.
+    var defined = ['music', 'shows', 'about', 'contact'];
+    var segment = window.location.pathname.replace(/^\/|\/$/g, '').toLowerCase();
+    if (defined.indexOf(segment) !== -1) {
+      window.location.replace('/#' + segment);
+    } else {
+      window.location.replace('/');
+    }
+  </script>
+</head>
+<body>
+</body>
+</html>
