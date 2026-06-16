@@ -198,6 +198,25 @@
       background: hsla(40, 60%, 50%, 0.15);
       color: hsl(40, 55%, 38%);
     }
+    .gig-bit-status {
+      display: inline-block;
+      font-size: 9px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 2px 6px;
+      border-radius: 3px;
+      margin-bottom: 8px;
+      margin-left: 4px;
+    }
+    .gig-bit-status.published {
+      background: hsla(145, 60%, 40%, 0.15);
+      color: hsl(145, 60%, 32%);
+    }
+    .gig-bit-status.not-on-bit {
+      background: hsla(0, 50%, 50%, 0.12);
+      color: hsl(0, 45%, 48%);
+    }
     .gig-description {
       font-size: 12px;
       font-weight: 300;
@@ -731,6 +750,35 @@
       color: hsl(0, 0%, 15%);
     }
 
+    /* Sidebar filters */
+    .sidebar-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-bottom: 16px;
+    }
+    .sidebar-filter-btn {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      padding: 3px 8px;
+      border: 1px solid hsl(0, 0%, 82%);
+      border-radius: 3px;
+      background: #fff;
+      color: hsl(0, 0%, 45%);
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .sidebar-filter-btn:hover {
+      border-color: hsl(0, 0%, 55%);
+      color: hsl(0, 0%, 25%);
+    }
+    .sidebar-filter-btn.active {
+      background: hsl(0, 0%, 20%);
+      color: #fff;
+      border-color: hsl(0, 0%, 20%);
+    }
+
     .gig-select-cb {
       cursor: pointer;
       flex-shrink: 0;
@@ -974,6 +1022,7 @@
         Select events in the sidebar, fill in any missing fields, then download a CSV for
         <a href="https://artists.bandsintown.com/artists/15588106/events/draft" target="_blank" style="color: hsl(0,0%,35%);">Bandsintown</a> bulk upload.
       </p>
+      <div id="bit-token-container"></div>
       <div class="bit-defaults">
         <label>Artist Name
           <input type="text" id="bit-artist" value="Tumbling Daisies" placeholder="Tumbling Daisies">
@@ -1001,6 +1050,14 @@
 
   <aside class="admin-sidebar">
     <div class="sidebar-title">Upcoming Gigs</div>
+    <div class="sidebar-filters" id="sidebar-filters" style="display:none;">
+      <button class="sidebar-filter-btn active" data-filter="all" data-group="status">All</button>
+      <button class="sidebar-filter-btn" data-filter="confirmed" data-group="status">Confirmed</button>
+      <button class="sidebar-filter-btn" data-filter="hold" data-group="status">Hold</button>
+      <span style="width:1px;background:hsl(0,0%,85%);align-self:stretch;margin:0 4px;"></span>
+      <button class="sidebar-filter-btn" data-filter="published" data-group="bit">Published on BIT</button>
+      <button class="sidebar-filter-btn" data-filter="not-on-bit" data-group="bit">Not on BIT</button>
+    </div>
     <div class="sidebar-select-actions" id="sidebar-select-actions" style="display:none;">
       <label><input type="checkbox" id="select-all-gigs"> Select all</label>
       <span class="selected-count" id="selected-count"></span>
@@ -1143,12 +1200,15 @@
 
           container.innerHTML = '';
           document.getElementById('sidebar-select-actions').style.display = 'flex';
+          document.getElementById('sidebar-filters').style.display = 'flex';
           upcoming.forEach(function (gig) {
             allUpcomingGigs.push(gig);
             var isHidden = hiddenGigIds.indexOf(gig.id) !== -1;
             var card = document.createElement('div');
             card.className = 'gig-card' + (isHidden ? ' is-hidden' : '');
             card.setAttribute('data-gig-id', gig.id);
+            card.setAttribute('data-status', gig.status);
+            card.setAttribute('data-date', gig.date);
 
             // Collapsed header: date, status, title + selection checkbox
             var header = '<div class="gig-header">';
@@ -1157,6 +1217,7 @@
             header += '<div class="gig-header-info">';
             header += '<div class="gig-date">' + fmtDate(gig.date) + '</div>';
             header += '<span class="gig-status ' + gig.status + '">' + gig.status + '</span>';
+            header += '<span class="gig-bit-status" data-bit-gig-id="' + gig.id + '"></span>';
             header += '<div class="gig-title">' + (gig.title || 'Untitled') + '</div>';
             header += '</div></div>';
 
@@ -1557,9 +1618,126 @@
             btn.textContent = 'Applied!';
             setTimeout(function () { btn.textContent = orig; }, 1500);
           });
+
+          // --- Apply BIT published badges ---
+          function applyBitBadges() {
+            var tokenContainer = document.getElementById('bit-token-container');
+            if (bitPublishedDates === null) {
+              // Data not loaded yet — retry shortly
+              if (!applyBitBadges._retries) applyBitBadges._retries = 0;
+              if (applyBitBadges._retries < 20) {
+                applyBitBadges._retries++;
+                setTimeout(applyBitBadges, 250);
+              } else {
+                tokenContainer.innerHTML =
+                  '<div style="font-size:11px;color:hsl(0,0%,50%);margin-bottom:8px;">' +
+                  'No BIT status data. Run <code>npm run fetch-gigs</code> with BANDSINTOWN_API_KEY set in .env' +
+                  '</div>';
+              }
+              return;
+            }
+
+            if (bitStatusInfo) {
+              tokenContainer.innerHTML =
+                '<div style="font-size:11px;color:hsl(0,0%,50%);margin-bottom:8px;">' +
+                'BIT status synced ' + bitStatusInfo.fetchedAt + ' &middot; ' +
+                bitStatusInfo.count + ' published event' + (bitStatusInfo.count !== 1 ? 's' : '') +
+                '</div>';
+            }
+
+            allUpcomingGigs.forEach(function (gig) {
+              var badge = document.querySelector('.gig-bit-status[data-bit-gig-id="' + gig.id + '"]');
+              var card = badge ? badge.closest('.gig-card') : null;
+              if (!badge) return;
+
+              if (bitPublishedDates[gig.date]) {
+                badge.textContent = 'published on bandsintown';
+                badge.className = 'gig-bit-status published';
+                if (card) card.setAttribute('data-bit', 'published');
+              } else {
+                badge.textContent = 'not on bandsintown';
+                badge.className = 'gig-bit-status not-on-bit';
+                if (card) card.setAttribute('data-bit', 'not-on-bit');
+              }
+            });
+          }
+          applyBitBadges();
+
+          // --- Sidebar filters (two independent groups) ---
+          var activeStatusFilter = 'all'; // all | confirmed | hold
+          var activeBitFilter = null;     // null | published | not-on-bit
+
+          document.getElementById('sidebar-filters').addEventListener('click', function (e) {
+            if (!e.target.classList.contains('sidebar-filter-btn')) return;
+            var group = e.target.getAttribute('data-group');
+            var filter = e.target.getAttribute('data-filter');
+
+            if (group === 'status') {
+              activeStatusFilter = filter;
+              document.querySelectorAll('.sidebar-filter-btn[data-group="status"]').forEach(function (b) {
+                b.classList.remove('active');
+              });
+              e.target.classList.add('active');
+            } else if (group === 'bit') {
+              // Toggle: clicking active BIT filter deselects it
+              if (activeBitFilter === filter) {
+                activeBitFilter = null;
+                e.target.classList.remove('active');
+              } else {
+                activeBitFilter = filter;
+                document.querySelectorAll('.sidebar-filter-btn[data-group="bit"]').forEach(function (b) {
+                  b.classList.remove('active');
+                });
+                e.target.classList.add('active');
+              }
+            }
+            applyFilter();
+          });
+
+          function applyFilter() {
+            var cards = document.querySelectorAll('.gig-card');
+            cards.forEach(function (card) {
+              var status = card.getAttribute('data-status');
+              var bit = card.getAttribute('data-bit') || '';
+
+              var statusMatch = activeStatusFilter === 'all' || status === activeStatusFilter;
+              var bitMatch = !activeBitFilter || bit === activeBitFilter;
+
+              card.style.display = (statusMatch && bitMatch) ? '' : 'none';
+            });
+          }
         })
         .catch(function () {
           document.getElementById('gigs-list').innerHTML = '<span class="gigs-empty">Could not load gigs.</span>';
+        });
+    })();
+  </script>
+
+  <script>
+    // --- Bandsintown published status (loaded by gig renderer) ---
+    var bitPublishedDates = null;
+    var bitStatusInfo = null;
+
+    (function () {
+      fetch('bit-status.json')
+        .then(function (res) {
+          if (!res.ok) throw new Error(res.status);
+          return res.json();
+        })
+        .then(function (data) {
+          var published = data.published || [];
+          bitPublishedDates = {};
+          published.forEach(function (evt) {
+            if (evt.date) bitPublishedDates[evt.date] = true;
+          });
+          bitStatusInfo = {
+            fetchedAt: data.fetchedAt ? new Date(data.fetchedAt).toLocaleString() : '',
+            count: published.length
+          };
+        })
+        .catch(function () {
+          bitPublishedDates = null;
+          bitStatusInfo = null;
         });
     })();
   </script>

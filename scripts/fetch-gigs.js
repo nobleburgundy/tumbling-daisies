@@ -6,8 +6,9 @@ const { google } = require('googleapis');
 const fs   = require('fs');
 const path = require('path');
 
-const CONFIG_PATH = path.join(__dirname, '../config.json');
-const OUTPUT_PATH = path.join(__dirname, '../gigs.json');
+const CONFIG_PATH      = path.join(__dirname, '../config.json');
+const OUTPUT_PATH      = path.join(__dirname, '../gigs.json');
+const BIT_STATUS_PATH  = path.join(__dirname, '../bit-status.json');
 
 const config = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8'));
 
@@ -172,6 +173,34 @@ function parseEvent(event) {
   };
 }
 
+// ---- Bandsintown published status ----
+async function fetchBitStatus() {
+  const appId = process.env.BANDSINTOWN_API_KEY;
+  if (!appId) {
+    console.log('BANDSINTOWN_API_KEY not set — skipping BIT status sync.');
+    return;
+  }
+
+  const artistId = config.bandsintownArtistId || 'id_15588106';
+  const url = `https://rest.bandsintown.com/artists/${artistId}/events/?app_id=${encodeURIComponent(appId)}&date=upcoming`;
+
+  const res = await fetch(url);
+  if (!res.ok) {
+    console.warn(`BIT API returned ${res.status} — skipping BIT status sync.`);
+    return;
+  }
+
+  const events = await res.json();
+  const published = (events || []).map(evt => ({
+    date: evt.datetime ? evt.datetime.substring(0, 10) : null,
+    venue: evt.venue ? evt.venue.name : null,
+  })).filter(e => e.date);
+
+  const status = { fetchedAt: new Date().toISOString(), published };
+  fs.writeFileSync(BIT_STATUS_PATH, JSON.stringify(status, null, 2));
+  console.log(`Wrote ${published.length} published BIT events to bit-status.json`);
+}
+
 // ---- Fetch and write ----
 async function main() {
   const auth     = getAuth();
@@ -199,6 +228,9 @@ async function main() {
 
   fs.writeFileSync(OUTPUT_PATH, JSON.stringify({ fetchedAt: now.toISOString(), gigs }, null, 2));
   console.log(`Wrote ${gigs.length} TD events to gigs.json`);
+
+  // Fetch BIT published status
+  await fetchBitStatus();
 }
 
 main().catch(err => { console.error(err.message); process.exit(1); });
