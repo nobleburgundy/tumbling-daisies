@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-06-23T12:55:54.378Z",
+  "fetchedAt": "2026-06-24T00:33:41.561Z",
   "gigs": [
     {
       "id": "_8opkce9m6p23cb9p8l2k4b9k6134aba28crj0b9n75134h1o6krk8da28k",
@@ -231,7 +231,7 @@
       "onSaleDate": null,
       "onSaleTime": null,
       "lineup": null,
-      "eventName": null,
+      "eventName": "Dusty's Green Booth",
       "eventImage": null,
       "cover": null,
       "age": null,
@@ -239,7 +239,7 @@
       "scheduledDate": null,
       "scheduledTime": null,
       "bitDescription": null,
-      "description": ""
+      "description": "---"
     }
   ]
 }
