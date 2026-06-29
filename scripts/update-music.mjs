@@ -6,7 +6,7 @@ import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const musicDir = path.join(__dirname, '../assets/music');
-const outFile = path.join(__dirname, '../music.json');
+const outFile = path.join(__dirname, '../data/music.json');
 
 const files = fs.readdirSync(musicDir).filter(f => f.endsWith('.mp3')).sort();
 

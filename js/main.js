@@ -13,6 +13,12 @@
   var playerVisible = false;
   var tracksLoaded = false;
 
+  function esc(str) {
+    return String(str == null ? '' : str)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
   // --- Create sticky player bar ---
   var playerBar = document.createElement('div');
   playerBar.id = 'player-bar';
@@ -117,7 +123,7 @@
   function loadTracks() {
     if (tracksLoaded) return Promise.resolve();
     tracksLoaded = true;
-    return fetch('music.json')
+    return fetch('data/music.json')
       .then(function (r) { return r.json(); })
       .then(function (files) {
         files.forEach(function (entry, i) {
@@ -155,10 +161,10 @@
         div.innerHTML =
           '<span class="track-num">' + String(i + 1).padStart(2, '0') + '</span>' +
           '<div class="track-info">' +
-            '<span class="track-name">' + t.name + '</span>' +
+            '<span class="track-name">' + esc(t.name) + '</span>' +
           '</div>' +
           '<span class="track-meta">' + (t.duration ? formatTime(t.duration) : '\u2026') + '</span>' +
-          '<a class="track-download" href="' + t.src + '" download aria-label="Download ' + t.name + '">' +
+          '<a class="track-download" href="' + esc(t.src) + '" download aria-label="Download ' + esc(t.name) + '">' +
             '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>' +
           '</a>';
         div.addEventListener('click', function (e) {
@@ -345,8 +351,8 @@
     }
 
     Promise.all([
-      fetch('gigs.json').then(function (res) { return res.json(); }),
-      fetch('hidden-gigs.json').then(function (res) { return res.json(); }).catch(function () { return []; })
+      fetch('data/gigs.json').then(function (res) { return res.json(); }),
+      fetch('data/hidden-gigs.json').then(function (res) { return res.json(); }).catch(function () { return []; })
     ])
       .then(function (results) {
         var data = results[0];
@@ -370,13 +376,13 @@
           var timeStr = gig.showtime || (gig.startTime ? fmtTime(gig.startTime) : '');
 
           var details = '';
-          if (timeStr) details += '<span class="show-detail">' + timeStr + '</span>';
-          if (gig.cover) details += '<span class="show-detail">' + gig.cover + '</span>';
-          if (gig.age) details += '<span class="show-detail">' + gig.age + '</span>';
-          if (gig.lineup) details += '<span class="show-detail show-lineup">' + gig.lineup + '</span>';
-          if (gig.ticketLink) {
+          if (timeStr) details += '<span class="show-detail">' + esc(timeStr) + '</span>';
+          if (gig.cover) details += '<span class="show-detail">' + esc(gig.cover) + '</span>';
+          if (gig.age) details += '<span class="show-detail">' + esc(gig.age) + '</span>';
+          if (gig.lineup) details += '<span class="show-detail show-lineup">' + esc(gig.lineup) + '</span>';
+          if (gig.ticketLink && /^https?:\/\//i.test(gig.ticketLink)) {
             var label = gig.ticketType || 'Tickets';
-            details += '<a class="show-detail show-ticket-link" href="' + gig.ticketLink + '" target="_blank" rel="noopener">' + label + '</a>';
+            details += '<a class="show-detail show-ticket-link" href="' + esc(gig.ticketLink) + '" target="_blank" rel="noopener">' + esc(label) + '</a>';
           }
 
           var div = document.createElement('div');
@@ -387,7 +393,7 @@
               '<span class="show-day">' + day + '</span>' +
             '</div>' +
             '<div class="show-info">' +
-              '<span class="show-title">' + title + '</span>' +
+              '<span class="show-title">' + esc(title) + '</span>' +
               details +
             '</div>' +
             '<div class="show-add-cal">' +
@@ -435,7 +441,7 @@
 
     var downloadSvg = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>';
 
-    fetch('press-photos.json')
+    fetch('data/press-photos.json')
       .then(function (r) { return r.json(); })
       .then(function (photos) {
         gallery.innerHTML = '';

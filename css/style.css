@@ -298,13 +298,6 @@ a:hover {
   color: hsl(0, 0%, 10%);
 }
 
-.photo-full {
-  grid-column: 1 / -1;
-}
-
-.photo-full img {
-  max-height: 400px;
-}
 
 .photo-half img {
   aspect-ratio: 1 / 1;
@@ -687,9 +680,6 @@ body.has-player {
   white-space: nowrap;
 }
 
-.music-cta {
-  text-align: center;
-}
 
 /* --- Buttons --- */
 .btn {
@@ -776,43 +766,8 @@ body.has-player {
   text-align: center;
 }
 
-.contact-form {
-  max-width: 500px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.contact-form input,
-.contact-form textarea {
-  width: 100%;
-  padding: 10px 14px;
-  font-family: 'EB Garamond', serif;
-  font-size: 16px;
-  background: #fff;
-  border: 1px solid var(--border);
-  color: var(--text);
-}
-
-.contact-form input::placeholder,
-.contact-form textarea::placeholder,
 .mailing-form input::placeholder {
   color: var(--text-light);
-}
-
-.contact-form input:focus,
-.contact-form textarea:focus {
-  outline: none;
-  border-color: var(--text-light);
-}
-
-.contact-form textarea {
-  resize: vertical;
-}
-
-.contact-form .btn {
-  align-self: center;
 }
 
 .socials {

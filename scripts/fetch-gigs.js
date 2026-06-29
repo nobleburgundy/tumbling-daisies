@@ -6,9 +6,9 @@ const { google } = require('googleapis');
 const fs   = require('fs');
 const path = require('path');
 
-const CONFIG_PATH      = path.join(__dirname, '../config.json');
-const OUTPUT_PATH      = path.join(__dirname, '../gigs.json');
-const BIT_STATUS_PATH  = path.join(__dirname, '../bit-status.json');
+const CONFIG_PATH      = path.join(__dirname, 'config.json');
+const OUTPUT_PATH      = path.join(__dirname, '../data/gigs.json');
+const BIT_STATUS_PATH  = path.join(__dirname, '../data/bit-status.json');
 
 const config = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8'));
 

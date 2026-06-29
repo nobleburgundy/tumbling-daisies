@@ -1121,6 +1121,12 @@
         return tmp.textContent || tmp.innerText || '';
       }
 
+      function esc(str) {
+        return String(str == null ? '' : str)
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+      }
+
       // --- Fetch subscribers ---
       var SHEET_URL = 'https://script.google.com/macros/s/AKfycbxoeUEz50ZId9GLN3fDZ8Rz1vtyKNEE2F6SD6OjFawQG0HZRq9XCxNUYvmsASiFFu0M/exec';
 
@@ -1138,7 +1144,7 @@
           var html = '<div class="subscriber-count">' + subs.length + ' subscriber' + (subs.length !== 1 ? 's' : '') + '</div>';
           subs.forEach(function (sub) {
             var date = sub.date ? new Date(sub.date).toLocaleDateString() : '';
-            html += '<div class="subscriber-item"><span>' + sub.email + '</span><span class="sub-date">' + date + '</span></div>';
+            html += '<div class="subscriber-item"><span>' + esc(sub.email) + '</span><span class="sub-date">' + esc(date) + '</span></div>';
           });
 
           container.innerHTML = html;
@@ -1156,7 +1162,7 @@
       var savedHiddenGigIds = [];
 
       function loadSavedHiddenGigs() {
-        return fetch('hidden-gigs.json')
+        return fetch('data/hidden-gigs.json')
           .then(function (res) { return res.json(); })
           .then(function (ids) {
             savedHiddenGigIds = ids || [];
@@ -1210,7 +1216,7 @@
 
       // --- Fetch gigs ---
       loadSavedHiddenGigs().then(function () {
-        return fetch('gigs.json');
+        return fetch('data/gigs.json');
       })
         .then(function (res) { return res.json(); })
         .then(function (data) {
@@ -1253,22 +1259,22 @@
 
             // Collapsed header: date, status, title + selection checkbox
             var header = '<div class="gig-header">';
-            header += '<input type="checkbox" class="gig-select-cb" data-gig-id="' + gig.id + '">';
+            header += '<input type="checkbox" class="gig-select-cb" data-gig-id="' + esc(gig.id) + '">';
             header += '<span class="gig-toggle">&#9654;</span>';
             header += '<div class="gig-header-info">';
             header += '<div class="gig-date">' + fmtDate(gig.date) + '</div>';
-            header += '<span class="gig-status ' + gig.status + '">' + gig.status + '</span>';
-            header += '<span class="gig-bit-status" data-bit-gig-id="' + gig.id + '"></span>';
-            header += '<div class="gig-title">' + (gig.title || 'Untitled') + '</div>';
+            header += '<span class="gig-status ' + esc(gig.status) + '">' + esc(gig.status) + '</span>';
+            header += '<span class="gig-bit-status" data-bit-gig-id="' + esc(gig.id) + '"></span>';
+            header += '<div class="gig-title">' + esc(gig.title || 'Untitled') + '</div>';
             header += '</div></div>';
 
             // Expandable details
             var details = '<div class="gig-details">';
             if (gig.venue && gig.venue !== gig.title) {
-              details += '<div class="gig-venue">' + gig.venue + '</div>';
+              details += '<div class="gig-venue">' + esc(gig.venue) + '</div>';
             }
             if (gig.location) {
-              details += '<div class="gig-location">' + gig.location + '</div>';
+              details += '<div class="gig-location">' + esc(gig.location) + '</div>';
             }
             if (gig.startTime) {
               var timeStr = fmtTime(gig.startTime);
@@ -1802,7 +1808,7 @@
     var bitStatusInfo = null;
 
     (function () {
-      fetch('bit-status.json')
+      fetch('data/bit-status.json')
         .then(function (res) {
           if (!res.ok) throw new Error(res.status);
           return res.json();
@@ -1938,7 +1944,7 @@
           var pages = data.pages;
 
           if (totals.error) {
-            statsEl.innerHTML = '<span class="stats-error">API error: ' + totals.error + '</span>';
+            statsEl.innerHTML = '<span class="stats-error">API error: ' + esc(String(totals.error || '')) + '</span>';
             return;
           }
 
@@ -1959,7 +1965,7 @@
               var pct = Math.round(((page.count || 0) / maxCount) * 100);
               html += '<li>';
               html += '<div style="flex:1;min-width:0;">';
-              html += '<span class="page-path">' + (page.path || '/') + '</span>';
+              html += '<span class="page-path">' + esc(page.path || '/') + '</span>';
               html += '<div class="stats-bar"><div class="stats-bar-fill" style="width:' + pct + '%"></div></div>';
               html += '</div>';
               html += '<span class="page-count">' + fmtNum(page.count || 0) + '</span>';

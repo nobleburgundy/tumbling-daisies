@@ -1,7 +1,7 @@
 #!/bin/bash
-# Regenerates press-photos.json and creates web-optimized thumbnails.
+# Regenerates data/press-photos.json and creates web-optimized thumbnails.
 # Thumbnails are resized to 1200px wide and saved as low-quality JPEGs.
-cd "$(dirname "$0")"
+cd "$(dirname "$0")/.."
 
 THUMB_DIR="assets/press-thumbs"
 THUMB_WIDTH=1200
@@ -29,7 +29,7 @@ for thumb in "$THUMB_DIR"/press-*.jpg; do
 done
 
 # Build manifest and generate thumbnails
-echo "[" > press-photos.json
+echo "[" > data/press-photos.json
 first=true
 count=0
 for f in $(ls assets/press-*.{jpg,jpeg,png} 2>/dev/null | sort); do
@@ -47,11 +47,11 @@ for f in $(ls assets/press-*.{jpg,jpeg,png} 2>/dev/null | sort); do
   if [ "$first" = true ]; then
     first=false
   else
-    echo "," >> press-photos.json
+    echo "," >> data/press-photos.json
   fi
-  printf '  "%s"' "$name" >> press-photos.json
+  printf '  "%s"' "$name" >> data/press-photos.json
   count=$((count + 1))
 done
-echo "" >> press-photos.json
-echo "]" >> press-photos.json
-echo "Updated press-photos.json with $count photos."
+echo "" >> data/press-photos.json
+echo "]" >> data/press-photos.json
+echo "Updated data/press-photos.json with $count photos."
