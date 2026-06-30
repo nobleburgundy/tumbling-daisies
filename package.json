@@ -3,7 +3,11 @@
   "private": true,
   "scripts": {
     "fetch-gigs": "node scripts/fetch-gigs.js",
-    "update-music": "node scripts/update-music.mjs"
+    "update-music": "node scripts/update-music.mjs",
+    "schedule-posts": "node scripts/schedule-posts.js"
+  },
+  "bin": {
+    "tumbling-daisies": "./scripts/schedule-posts.js"
   },
   "dependencies": {
     "dotenv": "^16.4.7",

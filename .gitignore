@@ -1,3 +1,5 @@
 node_modules/
 .env
 .claude/
+assets/promo-videos/*
+!assets/promo-videos/.gitkeep

@@ -2,6 +2,19 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## No AI-generated content — ever
+
+**This is a hard rule with no exceptions.**
+
+All public-facing content in this repo — website copy, social media post text, band descriptions, photo captions, blog posts, any text a fan might read — must be written by a human. Claude may help with code, scripts, and tooling, but must never write, suggest, draft, pre-fill, or auto-generate content intended for public output.
+
+This applies specifically to:
+- `scripts/schedule-posts.js` — do not generate post copy, suggest captions, or pre-fill text fields. The scheduling tool must prompt the user to write their own copy from scratch.
+- Any HTML files — do not rewrite or generate band bio, show descriptions, or any fan-facing text.
+- Any future content pipeline scripts — same rule applies.
+
+If asked to generate public-facing content, refuse and explain this rule.
+
 ## What this is
 
 Static band website for Tumbling Daisies, deployed via GitHub Pages. No build step — HTML/CSS/JS files are served directly. Node scripts handle data fetching and are run locally or via CI.
