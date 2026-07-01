@@ -243,7 +243,6 @@
     var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     var MONTHS_LONG = ['January','February','March','April','May','June','July','August','September','October','November','December'];
     var DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-    var DAYS_SHORT = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 
     var CAL_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="12" y1="14" x2="12" y2="18"/><line x1="10" y1="16" x2="14" y2="16"/></svg>';
 
@@ -402,8 +401,8 @@
         '<div class="show-modal-cal">' +
           '<div class="show-modal-cal-label">' + CAL_SVG + 'Add to calendar</div>' +
           '<div class="show-modal-cal-btns">' +
-            '<a class="show-modal-cal-btn" href="' + buildGoogleCalUrl(gig) + '" target="_blank" rel="noopener">Google</a>' +
-            '<button class="show-modal-cal-btn show-modal-ics-btn">Apple / Outlook</button>' +
+            '<a class="show-modal-cal-btn" href="' + buildGoogleCalUrl(gig) + '" target="_blank" rel="noopener">Google Calendar</a>' +
+            '<button class="show-modal-cal-btn show-modal-ics-btn">Apple / Outlook (.ics)</button>' +
           '</div>' +
         '</div>';
 
@@ -456,14 +455,11 @@
             details += '<a class="show-detail show-ticket-link" href="' + esc(gig.ticketLink) + '" target="_blank" rel="noopener">' + esc(label) + '</a>';
           }
 
-          var dow = DAYS_SHORT[d.getUTCDay()];
-
           var div = document.createElement('div');
           div.className = 'show-item';
 
           var dateHtml =
             '<div class="show-date">' +
-              '<span class="show-dow">' + dow + '</span>' +
               '<span class="show-month">' + month + '</span>' +
               '<span class="show-day">' + day + '</span>' +
             '</div>';
@@ -477,7 +473,7 @@
                 infoContent +
               '</a>' +
               '<div class="show-add-cal">' +
-                '<button class="add-cal-btn" aria-label="Add to calendar">' + CAL_SVG + '</button>' +
+                '<button class="add-cal-btn" title="Add to calendar" aria-label="Add to calendar">' + CAL_SVG + '</button>' +
                 '<div class="add-cal-dropdown">' +
                   '<a class="add-cal-option" href="' + buildGoogleCalUrl(gig) + '" target="_blank" rel="noopener">Google Calendar</a>' +
                   '<button class="add-cal-option add-cal-ics">Apple / Outlook (.ics)</button>' +
@@ -506,7 +502,7 @@
               dateHtml +
               '<div class="show-info">' + infoContent + '</div>' +
               '<div class="show-add-cal">' +
-                '<button class="add-cal-btn" aria-label="Add to calendar">' + CAL_SVG + '</button>' +
+                '<button class="add-cal-btn" title="Add to calendar" aria-label="Add to calendar">' + CAL_SVG + '</button>' +
                 '<div class="add-cal-dropdown">' +
                   '<a class="add-cal-option" href="' + buildGoogleCalUrl(gig) + '" target="_blank" rel="noopener">Google Calendar</a>' +
                   '<button class="add-cal-option add-cal-ics">Apple / Outlook (.ics)</button>' +

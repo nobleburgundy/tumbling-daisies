@@ -353,6 +353,11 @@ a:hover {
   padding: 16px 0;
   border-bottom: 1px solid var(--border);
   color: var(--text);
+  transition: background 0.15s;
+}
+
+.show-item:hover {
+  background: var(--bg);
 }
 
 .show-item:first-child {
@@ -365,15 +370,6 @@ a:hover {
   flex-direction: column;
   align-items: center;
   min-width: 50px;
-}
-
-.show-dow {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--text-light);
-  margin-bottom: 1px;
 }
 
 .show-month {
@@ -421,6 +417,7 @@ a:hover {
 .show-add-cal {
   position: relative;
   flex-shrink: 0;
+  margin-right: 12px;
 }
 
 .add-cal-btn {
@@ -514,7 +511,7 @@ a:hover {
 
 /* Show detail modal */
 .show-modal-overlay {
-  display: none;
+  display: flex;
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.45);
@@ -522,9 +519,15 @@ a:hover {
   align-items: center;
   justify-content: center;
   padding: 20px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.15s ease, visibility 0.15s ease;
 }
 .show-modal-overlay.open {
-  display: flex;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
 }
 .show-modal {
   background: var(--bg);
