@@ -338,7 +338,7 @@ a:hover {
 }
 
 .bit-follow-link:hover {
-  color: var(--text);
+  color: #1DA0C3;
 }
 
 .bit-follow-link svg {
@@ -365,6 +365,15 @@ a:hover {
   flex-direction: column;
   align-items: center;
   min-width: 50px;
+}
+
+.show-dow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-light);
+  margin-bottom: 1px;
 }
 
 .show-month {
@@ -475,6 +484,151 @@ a:hover {
 
 .add-cal-option + .add-cal-option {
   border-top: 1px solid var(--border);
+}
+
+/* BIT-linked shows: info area acts as a link */
+.show-bit-link {
+  text-decoration: none;
+  color: inherit;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.show-bit-link:hover .show-title {
+  text-decoration: underline;
+  color: var(--text);
+}
+
+/* Non-BIT shows: whole row opens modal */
+.show-has-modal {
+  cursor: pointer;
+}
+.show-has-modal:hover .show-title {
+  text-decoration: underline;
+}
+.show-has-modal:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Show detail modal */
+.show-modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.show-modal-overlay.open {
+  display: flex;
+}
+.show-modal {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 32px 28px 28px;
+  max-width: 420px;
+  width: 100%;
+  position: relative;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+.show-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 22px;
+  line-height: 1;
+  color: var(--text-light);
+  cursor: pointer;
+  padding: 4px 6px;
+}
+.show-modal-close:hover {
+  color: var(--text);
+}
+.show-modal-date {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-light);
+  margin-bottom: 8px;
+}
+.show-modal-title {
+  font-family: 'EB Garamond', serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0 0 14px;
+}
+.show-modal-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 20px;
+}
+.show-modal-detail {
+  font-family: 'EB Garamond', serif;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-light);
+}
+.show-modal-ticket-link {
+  color: var(--text-light);
+  text-decoration: none;
+}
+.show-modal-ticket-link:hover {
+  color: var(--text);
+}
+.show-modal-cal {
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+}
+.show-modal-cal-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-light);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.show-modal-cal-label svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+.show-modal-cal-btns {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.show-modal-cal-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 14px;
+  font-family: 'EB Garamond', serif;
+  font-size: 14px;
+  color: var(--text);
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s, border-color 0.15s;
+}
+.show-modal-cal-btn:hover {
+  background: var(--bg-alt);
+  border-color: var(--text-light);
+  color: var(--text);
 }
 
 .shows-loading,

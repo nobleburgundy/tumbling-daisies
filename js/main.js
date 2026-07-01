@@ -241,6 +241,11 @@
     if (!container) return;
 
     var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var MONTHS_LONG = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    var DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    var DAYS_SHORT = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+    var CAL_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="12" y1="14" x2="12" y2="18"/><line x1="10" y1="16" x2="14" y2="16"/></svg>';
 
     function fmtTime(isoString) {
       var d = new Date(isoString);
@@ -350,13 +355,77 @@
       URL.revokeObjectURL(url);
     }
 
+    // Show detail modal (created once, reused across shows)
+    var modal = document.getElementById('show-modal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.className = 'show-modal-overlay';
+      modal.id = 'show-modal';
+      modal.innerHTML =
+        '<div class="show-modal">' +
+          '<button class="show-modal-close" aria-label="Close">&times;</button>' +
+          '<div class="show-modal-body"></div>' +
+        '</div>';
+      document.body.appendChild(modal);
+
+      function closeModal() {
+        modal.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+      modal.querySelector('.show-modal-close').addEventListener('click', closeModal);
+      modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(); });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
+      });
+    }
+
+    function openShowModal(gig) {
+      var d = new Date(gig.date + 'T12:00:00');
+      var title = gig.eventName || gig.title || '';
+      var dateStr = DAYS[d.getDay()] + ', ' + MONTHS_LONG[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+
+      var detailsHtml = '';
+      if (gig.showtime) detailsHtml += '<div class="show-modal-detail">' + esc(gig.showtime) + '</div>';
+      if (gig.cover) detailsHtml += '<div class="show-modal-detail">' + esc(gig.cover) + '</div>';
+      if (gig.age) detailsHtml += '<div class="show-modal-detail">' + esc(gig.age) + '</div>';
+      if (gig.lineup) detailsHtml += '<div class="show-modal-detail">' + esc(gig.lineup) + '</div>';
+      if (gig.ticketLink && /^https?:\/\//i.test(gig.ticketLink)) {
+        var tLabel = gig.ticketType || 'Tickets';
+        detailsHtml += '<a class="show-modal-detail show-modal-ticket-link" href="' + esc(gig.ticketLink) + '" target="_blank" rel="noopener">' + esc(tLabel) + ' &rarr;</a>';
+      }
+
+      var body = modal.querySelector('.show-modal-body');
+      body.innerHTML =
+        '<div class="show-modal-date">' + dateStr + '</div>' +
+        '<h2 class="show-modal-title">' + esc(title) + '</h2>' +
+        (detailsHtml ? '<div class="show-modal-details">' + detailsHtml + '</div>' : '') +
+        '<div class="show-modal-cal">' +
+          '<div class="show-modal-cal-label">' + CAL_SVG + 'Add to calendar</div>' +
+          '<div class="show-modal-cal-btns">' +
+            '<a class="show-modal-cal-btn" href="' + buildGoogleCalUrl(gig) + '" target="_blank" rel="noopener">Google</a>' +
+            '<button class="show-modal-cal-btn show-modal-ics-btn">Apple / Outlook</button>' +
+          '</div>' +
+        '</div>';
+
+      body.querySelector('.show-modal-ics-btn').addEventListener('click', function () { downloadIcs(gig); });
+
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
     Promise.all([
       fetch('data/gigs.json').then(function (res) { return res.json(); }),
-      fetch('data/hidden-gigs.json').then(function (res) { return res.json(); }).catch(function () { return []; })
+      fetch('data/hidden-gigs.json').then(function (res) { return res.json(); }).catch(function () { return []; }),
+      fetch('data/bit-status.json').then(function (res) { return res.json(); }).catch(function () { return { published: [] }; })
     ])
       .then(function (results) {
         var data = results[0];
         var hiddenIds = results[1] || [];
+        var bitData = results[2] || { published: [] };
+
+        var bitUrlByDate = {};
+        (bitData.published || []).forEach(function (b) { bitUrlByDate[b.date] = b.url; });
+
         var now = new Date();
         var todayStr = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
         var upcoming = (data.gigs || []).filter(function (g) {
@@ -369,6 +438,7 @@
           return;
         }
         upcoming.forEach(function (gig) {
+          var bitUrl = bitUrlByDate[gig.date];
           var d = new Date(gig.date);
           var month = MONTHS[d.getUTCMonth()];
           var day = String(d.getUTCDate()).padStart(2, '0');
@@ -380,46 +450,93 @@
           if (gig.cover) details += '<span class="show-detail">' + esc(gig.cover) + '</span>';
           if (gig.age) details += '<span class="show-detail">' + esc(gig.age) + '</span>';
           if (gig.lineup) details += '<span class="show-detail show-lineup">' + esc(gig.lineup) + '</span>';
-          if (gig.ticketLink && /^https?:\/\//i.test(gig.ticketLink)) {
+          // Ticket links only appear in row for BIT shows (non-BIT shows surface them in the modal)
+          if (bitUrl && gig.ticketLink && /^https?:\/\//i.test(gig.ticketLink)) {
             var label = gig.ticketType || 'Tickets';
             details += '<a class="show-detail show-ticket-link" href="' + esc(gig.ticketLink) + '" target="_blank" rel="noopener">' + esc(label) + '</a>';
           }
 
+          var dow = DAYS_SHORT[d.getUTCDay()];
+
           var div = document.createElement('div');
           div.className = 'show-item';
-          div.innerHTML =
+
+          var dateHtml =
             '<div class="show-date">' +
+              '<span class="show-dow">' + dow + '</span>' +
               '<span class="show-month">' + month + '</span>' +
               '<span class="show-day">' + day + '</span>' +
-            '</div>' +
-            '<div class="show-info">' +
-              '<span class="show-title">' + esc(title) + '</span>' +
-              details +
-            '</div>' +
-            '<div class="show-add-cal">' +
-              '<button class="add-cal-btn" aria-label="Add to calendar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="12" y1="14" x2="12" y2="18"/><line x1="10" y1="16" x2="14" y2="16"/></svg></button>' +
-              '<div class="add-cal-dropdown">' +
-                '<a class="add-cal-option" href="' + buildGoogleCalUrl(gig) + '" target="_blank" rel="noopener">Google Calendar</a>' +
-                '<button class="add-cal-option add-cal-ics">Apple / Outlook (.ics)</button>' +
-              '</div>' +
             '</div>';
+          var infoContent = '<span class="show-title">' + esc(title) + '</span>' + details;
 
-          // Wire up ICS download
-          var icsBtn = div.querySelector('.add-cal-ics');
-          (function (g) {
-            icsBtn.addEventListener('click', function () { downloadIcs(g); });
-          })(gig);
+          if (bitUrl) {
+            // BIT-published: info area links to Bandsintown; calendar button stays in row
+            div.innerHTML =
+              dateHtml +
+              '<a class="show-info show-bit-link" href="' + esc(bitUrl) + '" target="_blank" rel="noopener">' +
+                infoContent +
+              '</a>' +
+              '<div class="show-add-cal">' +
+                '<button class="add-cal-btn" aria-label="Add to calendar">' + CAL_SVG + '</button>' +
+                '<div class="add-cal-dropdown">' +
+                  '<a class="add-cal-option" href="' + buildGoogleCalUrl(gig) + '" target="_blank" rel="noopener">Google Calendar</a>' +
+                  '<button class="add-cal-option add-cal-ics">Apple / Outlook (.ics)</button>' +
+                '</div>' +
+              '</div>';
 
-          // Toggle dropdown
-          var calBtn = div.querySelector('.add-cal-btn');
-          var dropdown = div.querySelector('.add-cal-dropdown');
-          calBtn.addEventListener('click', function (e) {
-            e.stopPropagation();
-            var wasOpen = dropdown.classList.contains('open');
-            // Close any other open dropdowns
-            container.querySelectorAll('.add-cal-dropdown.open').forEach(function (d) { d.classList.remove('open'); });
-            if (!wasOpen) dropdown.classList.add('open');
-          });
+            var icsBtn = div.querySelector('.add-cal-ics');
+            (function (g) {
+              icsBtn.addEventListener('click', function () { downloadIcs(g); });
+            })(gig);
+
+            var calBtn = div.querySelector('.add-cal-btn');
+            var dropdown = div.querySelector('.add-cal-dropdown');
+            calBtn.addEventListener('click', function (e) {
+              e.stopPropagation();
+              var wasOpen = dropdown.classList.contains('open');
+              container.querySelectorAll('.add-cal-dropdown.open').forEach(function (d) { d.classList.remove('open'); });
+              if (!wasOpen) dropdown.classList.add('open');
+            });
+          } else {
+            // Not on Bandsintown: row click opens modal; calendar button still works inline
+            div.classList.add('show-has-modal');
+            div.setAttribute('tabindex', '0');
+            div.setAttribute('role', 'button');
+            div.innerHTML =
+              dateHtml +
+              '<div class="show-info">' + infoContent + '</div>' +
+              '<div class="show-add-cal">' +
+                '<button class="add-cal-btn" aria-label="Add to calendar">' + CAL_SVG + '</button>' +
+                '<div class="add-cal-dropdown">' +
+                  '<a class="add-cal-option" href="' + buildGoogleCalUrl(gig) + '" target="_blank" rel="noopener">Google Calendar</a>' +
+                  '<button class="add-cal-option add-cal-ics">Apple / Outlook (.ics)</button>' +
+                '</div>' +
+              '</div>';
+
+            var icsBtn = div.querySelector('.add-cal-ics');
+            (function (g) {
+              icsBtn.addEventListener('click', function (e) { e.stopPropagation(); downloadIcs(g); });
+            })(gig);
+
+            var calBtn = div.querySelector('.add-cal-btn');
+            var dropdown = div.querySelector('.add-cal-dropdown');
+            calBtn.addEventListener('click', function (e) {
+              e.stopPropagation();
+              var wasOpen = dropdown.classList.contains('open');
+              container.querySelectorAll('.add-cal-dropdown.open').forEach(function (d) { d.classList.remove('open'); });
+              if (!wasOpen) dropdown.classList.add('open');
+            });
+
+            (function (g) {
+              div.addEventListener('click', function (e) {
+                if (e.target.closest('.show-add-cal')) return;
+                openShowModal(g);
+              });
+              div.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openShowModal(g); }
+              });
+            })(gig);
+          }
 
           container.appendChild(div);
         });
