@@ -887,6 +887,41 @@ body.has-player {
 .contact-card a {
   font-family: 'EB Garamond', serif;
   font-size: 18px;
+  color: var(--text-light);
+  text-decoration: none;
+}
+
+.contact-email {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-family: 'EB Garamond', serif;
+  font-size: 18px;
+  color: var(--text-light);
+  margin-bottom: 4px;
+}
+
+.copy-email-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-light);
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s;
+  flex-shrink: 0;
+}
+.copy-email-btn:hover {
+  color: var(--text);
+}
+.copy-email-btn svg {
+  width: 14px;
+  height: 14px;
+}
+.copy-email-btn .icon-check {
+  color: #4caf50;
 }
 
 /* --- Contact / Mailing List --- */

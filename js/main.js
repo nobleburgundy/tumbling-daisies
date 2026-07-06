@@ -722,12 +722,31 @@
   }
 
   // --- Init page-specific features ---
+  function initContactCopy() {
+    document.querySelectorAll('.copy-email-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var email = (btn.dataset.e || '') + '@' + (btn.dataset.d || '');
+        navigator.clipboard.writeText(email).then(function () {
+          var iconCopy = btn.querySelector('.icon-copy');
+          var iconCheck = btn.querySelector('.icon-check');
+          iconCopy.style.display = 'none';
+          iconCheck.style.display = '';
+          setTimeout(function () {
+            iconCopy.style.display = '';
+            iconCheck.style.display = 'none';
+          }, 2000);
+        });
+      });
+    });
+  }
+
   function initPage() {
     initMobileMenu();
     initShows();
     renderTrackList();
     initGallery();
     initMailingForm();
+    initContactCopy();
   }
 
   // First load
