@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-17T12:28:57.256Z",
+  "fetchedAt": "2026-08-18T00:50:00.372Z",
   "gigs": [
     {
       "id": "11pudvn1b99mv5q4769vhfgcu8",
@@ -60,6 +60,36 @@
       "scheduledTime": null,
       "bitDescription": null,
       "description": "---"
+    },
+    {
+      "id": "7pll74vct1r81o2mhr40js41eq",
+      "date": "2026-11-21",
+      "startTime": null,
+      "endTime": null,
+      "endDate": "2026-11-22",
+      "venue": "White Squirell",
+      "status": "hold",
+      "title": "(h) White Squirell",
+      "location": "",
+      "city": null,
+      "region": null,
+      "showtime": null,
+      "ticketLink": null,
+      "ticketType": null,
+      "ticketLink2": null,
+      "ticketType2": null,
+      "onSaleDate": null,
+      "onSaleTime": null,
+      "lineup": null,
+      "eventName": null,
+      "eventImage": null,
+      "cover": null,
+      "age": null,
+      "streamingLink": null,
+      "scheduledDate": null,
+      "scheduledTime": null,
+      "bitDescription": null,
+      "description": ""
     }
   ]
 }
