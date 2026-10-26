@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-26T02:38:24.015Z",
+  "fetchedAt": "2026-10-26T18:02:50.197Z",
   "gigs": [
     {
       "id": "3tit1jt9pv9p7f73ndam1volkl",
@@ -13,23 +13,23 @@
       "location": "",
       "city": null,
       "region": null,
-      "showtime": null,
+      "showtime": "8pm",
       "ticketLink": null,
       "ticketType": null,
       "ticketLink2": null,
       "ticketType2": null,
       "onSaleDate": null,
       "onSaleTime": null,
-      "lineup": null,
-      "eventName": "Dusty's Green Booth",
+      "lineup": "Tumbling Daisies",
+      "eventName": "Tumbling Daisies at Dusty's Green Booth",
       "eventImage": null,
-      "cover": null,
-      "age": null,
+      "cover": "Free",
+      "age": "21+",
       "streamingLink": null,
       "scheduledDate": null,
       "scheduledTime": null,
       "bitDescription": null,
-      "description": "---"
+      "description": "---\nEvent Image:"
     },
     {
       "id": "0kfthfuod1638ps06d3t4oteir",
