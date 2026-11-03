@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-02T21:14:10.805Z",
+  "fetchedAt": "2026-11-03T04:51:54.912Z",
   "gigs": [
     {
       "id": "0kfthfuod1638ps06d3t4oteir",
@@ -33,10 +33,10 @@
     },
     {
       "id": "577laab55ri5gfd1s7nshe2avu",
-      "date": "2027-04-10",
+      "date": "2027-04-03",
       "startTime": null,
       "endTime": null,
-      "endDate": "2027-04-11",
+      "endDate": "2027-04-04",
       "venue": "Dusty's",
       "status": "hold",
       "title": "(H) Dusty's",
