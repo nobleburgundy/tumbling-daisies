@@ -26,7 +26,7 @@ html {
 }
 
 body {
-  font-family: 'EB Garamond', serif;
+  font-family: "EB Garamond", serif;
   font-size: 17px;
   line-height: 1.5;
   background: var(--bg);
@@ -76,7 +76,9 @@ a:hover {
   width: 22px;
   height: 2px;
   background: #fff;
-  transition: transform 0.3s, opacity 0.3s;
+  transition:
+    transform 0.3s,
+    opacity 0.3s;
 }
 
 .nav-links {
@@ -90,7 +92,7 @@ a:hover {
 }
 
 .nav-links a {
-  font-family: 'Josefin Sans', sans-serif;
+  font-family: "Josefin Sans", sans-serif;
   font-weight: 400;
   font-size: 19px;
   color: hsl(0, 0%, 100%);
@@ -151,7 +153,7 @@ a:hover {
 }
 
 .hero-title {
-  font-family: 'Sancreek', cursive;
+  font-family: "Sancreek", cursive;
   font-size: clamp(36px, 12vw, 161px);
   font-weight: 400;
   text-transform: uppercase;
@@ -164,7 +166,7 @@ a:hover {
 }
 
 .hero-subtitle {
-  font-family: 'EB Garamond', sans-serif;
+  font-family: "EB Garamond", sans-serif;
   font-weight: 300;
   font-size: clamp(13px, 2.5vw, 18px);
   text-transform: uppercase;
@@ -184,9 +186,10 @@ a:hover {
 }
 
 .section-title {
-  font-family: 'Courier New', Courier, monospace;
+  font-family: "Archivo", sans-serif;
   font-size: 30px;
-  font-weight: 500;
+  font-weight: 100;
+  opacity: 0.9;
   color: var(--text);
   line-height: 1.3;
   letter-spacing: 0.03em;
@@ -199,7 +202,7 @@ a:hover {
 }
 
 .bio-text {
-  font-family: 'EB Garamond', serif;
+  font-family: "EB Garamond", serif;
   font-size: 20px;
   line-height: 1.5;
   color: var(--text);
@@ -214,7 +217,7 @@ a:hover {
 }
 
 .pull-quote p {
-  font-family: 'EB Garamond', serif;
+  font-family: "EB Garamond", serif;
   font-style: italic;
   font-size: 24px;
   color: var(--pull-quote-color);
@@ -226,7 +229,7 @@ a:hover {
 .pull-quote cite {
   display: block;
   margin-top: 12px;
-  font-family: 'EB Garamond', serif;
+  font-family: "EB Garamond", serif;
   font-size: 16px;
   color: hsl(0, 0%, 55%);
   font-style: normal;
@@ -237,7 +240,7 @@ a:hover {
 }
 
 .band-members-list p {
-  font-family: 'EB Garamond', serif;
+  font-family: "EB Garamond", serif;
   font-size: 20px;
   line-height: 1.7;
   color: var(--text);
@@ -286,7 +289,9 @@ a:hover {
   border-radius: 50%;
   text-decoration: none;
   opacity: 0;
-  transition: opacity 0.2s, background 0.2s;
+  transition:
+    opacity 0.2s,
+    background 0.2s;
 }
 
 .photo-item:hover .photo-download {
@@ -297,7 +302,6 @@ a:hover {
   background: var(--red);
   color: hsl(0, 0%, 10%);
 }
-
 
 .photo-half img {
   aspect-ratio: 1 / 1;
@@ -329,7 +333,7 @@ a:hover {
   align-items: center;
   gap: 6px;
   margin-top: 20px;
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: "IBM Plex Mono", monospace;
   font-size: 12px;
   letter-spacing: 0.03em;
   color: var(--text-light);
@@ -338,7 +342,7 @@ a:hover {
 }
 
 .bit-follow-link:hover {
-  color: #1DA0C3;
+  color: #1da0c3;
 }
 
 .bit-follow-link svg {
@@ -364,7 +368,6 @@ a:hover {
   border-top: 1px solid var(--border);
 }
 
-
 .show-date {
   display: flex;
   flex-direction: column;
@@ -373,7 +376,7 @@ a:hover {
 }
 
 .show-month {
-  font-family: 'EB Garamond', serif;
+  font-family: "EB Garamond", serif;
   font-weight: 400;
   font-size: 12px;
   text-transform: uppercase;
@@ -382,7 +385,7 @@ a:hover {
 }
 
 .show-day {
-  font-family: 'EB Garamond', serif;
+  font-family: "EB Garamond", serif;
   font-size: 28px;
   font-weight: 400;
   line-height: 1;
@@ -396,14 +399,14 @@ a:hover {
 }
 
 .show-title {
-  font-family: 'EB Garamond', serif;
+  font-family: "EB Garamond", serif;
   font-weight: 600;
   font-size: 18px;
   color: var(--text);
 }
 
 .show-detail {
-  font-family: 'EB Garamond', serif;
+  font-family: "EB Garamond", serif;
   font-weight: 300;
   font-size: 12px;
   color: var(--text-light);
@@ -411,7 +414,6 @@ a:hover {
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
-
 
 /* Add to calendar */
 .show-add-cal {
@@ -464,7 +466,7 @@ a:hover {
   display: block;
   width: 100%;
   padding: 10px 14px;
-  font-family: 'EB Garamond', serif;
+  font-family: "EB Garamond", serif;
   font-size: 14px;
   color: var(--text);
   background: none;
@@ -522,7 +524,9 @@ a:hover {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity 0.15s ease, visibility 0.15s ease;
+  transition:
+    opacity 0.15s ease,
+    visibility 0.15s ease;
 }
 .show-modal-overlay.open {
   opacity: 1;
@@ -555,7 +559,7 @@ a:hover {
   color: var(--text);
 }
 .show-modal-date {
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: "IBM Plex Mono", monospace;
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -563,7 +567,7 @@ a:hover {
   margin-bottom: 8px;
 }
 .show-modal-title {
-  font-family: 'EB Garamond', serif;
+  font-family: "EB Garamond", serif;
   font-size: 22px;
   font-weight: 600;
   color: var(--text);
@@ -576,7 +580,7 @@ a:hover {
   margin-bottom: 20px;
 }
 .show-modal-detail {
-  font-family: 'EB Garamond', serif;
+  font-family: "EB Garamond", serif;
   font-size: 13px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -594,7 +598,7 @@ a:hover {
   padding-top: 16px;
 }
 .show-modal-cal-label {
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: "IBM Plex Mono", monospace;
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -618,7 +622,7 @@ a:hover {
   display: inline-flex;
   align-items: center;
   padding: 8px 14px;
-  font-family: 'EB Garamond', serif;
+  font-family: "EB Garamond", serif;
   font-size: 14px;
   color: var(--text);
   background: none;
@@ -626,7 +630,9 @@ a:hover {
   border-radius: 4px;
   cursor: pointer;
   text-decoration: none;
-  transition: background 0.15s, border-color 0.15s;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
 }
 .show-modal-cal-btn:hover {
   background: var(--bg-alt);
@@ -636,7 +642,7 @@ a:hover {
 
 .shows-loading,
 .shows-empty {
-  font-family: 'EB Garamond', serif;
+  font-family: "EB Garamond", serif;
   font-size: 15px;
   color: var(--text-light);
   padding: 16px 0;
@@ -704,7 +710,7 @@ a:hover {
 }
 
 .track-num {
-  font-family: 'EB Garamond', serif;
+  font-family: "EB Garamond", serif;
   font-weight: 300;
   font-size: 14px;
   color: var(--text-light);
@@ -719,14 +725,14 @@ a:hover {
 }
 
 .track-name {
-  font-family: 'EB Garamond', serif;
+  font-family: "EB Garamond", serif;
   font-weight: 100;
   font-size: 17px;
   color: var(--text);
 }
 
 .track-meta {
-  font-family: 'EB Garamond', serif;
+  font-family: "EB Garamond", serif;
   font-weight: 300;
   font-size: 12px;
   text-transform: uppercase;
@@ -742,7 +748,9 @@ a:hover {
   padding: 6px;
   border-radius: 4px;
   color: var(--text-light);
-  transition: color 0.2s, background 0.2s;
+  transition:
+    color 0.2s,
+    background 0.2s;
 }
 
 .track-download:hover {
@@ -808,7 +816,7 @@ body.has-player {
 }
 
 .player-bar-title {
-  font-family: 'EB Garamond', serif;
+  font-family: "EB Garamond", serif;
   font-weight: 100;
   font-size: 16px;
   color: var(--accent);
@@ -818,7 +826,7 @@ body.has-player {
 }
 
 .player-bar-album {
-  font-family: 'EB Garamond', serif;
+  font-family: "EB Garamond", serif;
   font-size: 13px;
   font-style: italic;
   color: hsl(0, 0%, 55%);
@@ -850,18 +858,17 @@ body.has-player {
 }
 
 .player-bar-time {
-  font-family: 'Josefin Sans', sans-serif;
+  font-family: "Josefin Sans", sans-serif;
   font-size: 11px;
   font-weight: 300;
   color: hsl(0, 0%, 45%);
   white-space: nowrap;
 }
 
-
 /* --- Buttons --- */
 .btn {
   display: inline-block;
-  font-family: 'EB Garamond', serif;
+  font-family: "EB Garamond", serif;
   font-weight: 400;
   font-size: 14px;
   text-transform: uppercase;
@@ -890,7 +897,7 @@ body.has-player {
 }
 
 .contact-card h3 {
-  font-family: 'EB Garamond', serif;
+  font-family: "EB Garamond", serif;
   font-size: 22px;
   font-weight: 600;
   color: var(--text);
@@ -898,14 +905,14 @@ body.has-player {
 }
 
 .contact-card p {
-  font-family: 'EB Garamond', serif;
+  font-family: "EB Garamond", serif;
   font-size: 18px;
   color: var(--text-light);
   margin-bottom: 4px;
 }
 
 .contact-card a {
-  font-family: 'EB Garamond', serif;
+  font-family: "EB Garamond", serif;
   font-size: 18px;
   color: var(--text-light);
   text-decoration: none;
@@ -916,7 +923,7 @@ body.has-player {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  font-family: 'EB Garamond', serif;
+  font-family: "EB Garamond", serif;
   font-size: 18px;
   color: var(--text-light);
   margin-bottom: 4px;
@@ -946,7 +953,8 @@ body.has-player {
 
 /* --- Contact / Mailing List --- */
 .mailing-title {
-  font-family: 'EB Garamond', serif;
+  font-family: "EB Garamond", serif;
+  font-weight: 500;
 }
 
 .contact {
@@ -965,7 +973,7 @@ body.has-player {
 .mailing-form input {
   flex: 1;
   padding: 10px 14px;
-  font-family: 'EB Garamond', serif;
+  font-family: "EB Garamond", serif;
   font-size: 16px;
   border: 1px solid var(--border);
   background: #fff;
@@ -1023,7 +1031,7 @@ body.has-player {
 }
 
 .footer-copy {
-  font-family: 'Josefin Sans', sans-serif;
+  font-family: "Josefin Sans", sans-serif;
   font-weight: 300;
   font-size: 13px;
   opacity: 0.5;
