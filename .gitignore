@@ -4,3 +4,4 @@ node_modules/
 assets/promo-videos/*
 !assets/promo-videos/.gitkeep
 scripts/SCHEDULE_POSTS_CONTEXT.md
+*.wav
