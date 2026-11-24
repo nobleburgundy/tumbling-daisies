@@ -135,6 +135,14 @@ a:hover {
   object-fit: cover;
 }
 
+/* Drummer photo: zoom in from the bottom (top overflows and is clipped by
+   .hero) so his head sits at roughly the same height as the others */
+.hero-photos img:first-child {
+  height: 160%;
+  align-self: flex-end;
+  object-position: 30% 50%;
+}
+
 .hero-overlay {
   position: absolute;
   inset: 0;
@@ -1080,7 +1088,7 @@ body.has-player {
   }
 
   .hero-photos img:first-child {
-    object-position: calc(50% + 75px) bottom;
+    object-position: 26% 50%;
   }
 
   .hero-subtitle {
